@@ -1,0 +1,722 @@
+{% extends 'base/basesam.html' %}
+
+{% block page_content %}
+
+    {% if obj %}
+    <form  method='POST' role='form' action = "{% url 'sam:actaestcarcelario_edit' idestablecimiento obj.pk %}"> 
+    {% else %}  
+    <form  method='POST' role='form' action = "{% url 'sam:actaestcarcelario_create' idestablecimiento %}">
+    {% endif %}
+        {% csrf_token %}
+              <div class="col-xl-12 col-md-12 mb-12">
+                {% if obj %}
+                  <div class="card border-left-warning shadow h-100 py-2">
+                {% else %}    
+                  <div class="card border-left-success shadow h-100 py-2">
+                 {%  endif %}   
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                               {% if obj %} Editar {% else %} Nuevo {% endif %} Acta de visita a establecumientos carcelarios: {{nomestablecimiento}}
+                           </div>                      
+                           <div class="dropdown-divider"></div> 
+
+                             <input type="hidden" id="id_establecimiento" name="establecimiento" value="{{ idestablecimiento }}">
+
+                             <input type="hidden" id="id_tipoacta" name="tipoacta" value="{{ codtipoacta }}">
+
+                           
+                           <div class="col-12">
+                            <div class="card border-dark mb-12" >
+                              <div class="card-header" style="font-weight: bold; ">Identificación del establecimiento.</div>
+                              <div class="card-body text-dark">
+                            <div class="row">
+                                <div class="form-group col-12">
+                                    <label for="id_establecimiento" style="font-weight: bold; font-size: 25px; color:blue;">Establecimiento: {{ nomestablecimiento }}</label>  
+                                 </div>
+                             </div>
+                             <div class="row">
+                                 <div class="form-group col-2">
+                                    <label for="id_fecha">Fecha</label>   
+                                      {{ form.fecha }}                                    
+                                 </div>
+                                 <div class="form-group col-2">
+                                    <label for="id_nroacta">Acta Nro.</label>   
+                                      {{ form.nroacta }}                                    
+                                 </div>
+
+                                 
+                                 
+                                 <div class="form-group col-3">
+                                    <label for="id_municipio">Ciudad</label>   
+                                      {{ form.municipio }}
+                                 </div>
+                             </div>
+                            </div>
+                         </div>
+
+                         <div class="card border-dark mb-12" style="margin-top: 5px;">
+                              <div class="card-header" style="font-weight: bold; ">Tipo de establecimiento carcelario.</div>
+                              <div class="card-body text-dark">
+
+                             <div class="row">
+                                 <div class="form-group col-2">
+                                    <label for="id_carcel">carcel</label>   
+                                      {{ form.carcel }}                                    
+                                 </div>
+                                 <div class="form-group col-2">
+                                    <label for="id_centromenores">Centro de reclusión de menores</label>   
+                                      {{ form.centromenores }}              
+                                 </div>
+
+                                 <div class="form-group col-2">
+                                    <label for="id_centroreclusiondamas">Centro de reclusión para damas </label>   
+                                      {{ form.centroreclusiondamas }}                     
+                                 </div>                                 
+                                 
+                                 <div class="form-group col-2">
+                                    <label for="id_carcelmilitares">Cárcel para militares</label>
+                                      {{ form.carcelmilitares }}
+                                 </div>
+                                 <div class="form-group col-2">
+                                    <label for="id_centrosalaretencion">Centros o salas  de retención </label>
+                                      {{ form.centrosalaretencion }}
+                                 </div>
+                                 <div class="form-group col-2">
+                                    <label for="id_otrotiporeclusion">Otro </label>
+                                      {{ form.otrotiporeclusion }}
+                                 </div>
+                             </div>
+
+                             <div class="row">
+                               <div class="form-group col-12">
+                                    <label for="id_entidadterritorialsalud">Entidad territorial de salud </label>
+                                      {{ form.entidadterritorialsalud }}
+                                 </div>
+                               
+                             </div>
+                            </div>
+                         </div>
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                              <div class="card-header" style="font-weight: bold; ">Concepto sanitario inspección anterior.</div>
+                              <div class="card-body text-dark">
+
+                             <div class="row">
+                                  <div class="form-group col-2">
+                                    <label for="id_inspeccionanterior">Inpección anterior</label>   
+                                      {{ form.inspeccionanterior }}
+                                 </div>
+                                 <div class="form-group col-2">
+                                    <label for="id_fechaultinspeccion">Fecha Ult. Concepto</label>   
+                                      {{ form.fechaultinspeccion }}
+                                 </div>
+                                 <div class="form-group col-2">
+                                    <label for="id_conceptoanterior">Concepto anterior</label>   
+                                      {{ form.conceptoanterior }}
+                                 </div>      
+                                 <div class="form-group col-2">
+                                    <label for="id_porcumplimientoanterior">% Cumplimiento</label> 
+                                      {{ form.porcumplimientoanterior }}
+                                 </div>    
+                                 <div class="form-group col-2">
+                                    <label for="id_nroactanterior">Nro Acta anterior</label>  {{ form.nroactanterior }}
+                                 </div>    
+                                 <div class="form-group col-2">
+                                    <label for="id_motivovisita">Motivo de visita</label>   
+                                      {{ form.motivovisita }}                     
+                                 </div>                                                 
+                             </div>
+
+                          </div>
+                         </div>
+
+
+                         <div class="card border-dark mb-12" style="margin-top: 5px;">
+                              <div class="card-header" style="font-weight: bold; ">Otros datos del establecimiento</div>
+                              <div class="card-body text-dark">
+                             <div class="row">
+                                 <div class="form-group col-2">
+                                    <label for="id_nroadministativos">Nro Administrativos</label>   
+                                      {{ form.nroadministativos }}             
+                                 </div>
+                                 <div class="form-group col-2">
+                                    <label for="id_nrooperativos">Nro Operativos</label>   
+                                      {{ form.nrooperativos }}     
+                                 </div>
+
+                                 <div class="form-group col-2">
+                                    <label for="id_nroafiliadosarl">Nro Afiliados a ARL</label>   
+                                      {{ form.nroafiliadosarl }}                     
+                                 </div>
+                                 
+                                 <div class="form-group col-2">
+                                    <label for="id_nroafiliadosegsocial">Nro Afiliados Seg Social</label>   
+                                      {{ form.nroafiliadosegsocial }}                     
+                                 </div>
+                                 <div class="form-group col-4">
+                                    <label for="id_gestoresiduohospitalario">Nombre del gestor de residuos hospitalarios</label>   
+                                      {{ form.gestoresiduohospitalario }}
+                                 </div>
+                             </div>
+
+                             <div class="row">
+                                <div class="form-group col-3">
+                                    <label for="id_nroceldas">Número de celdas</label>   
+                                      {{ form.nroceldas }}
+                                </div>
+                                <div class="form-group col-3">
+                                    <label for="id_nropatios">Número de patios</label>   
+                                      {{ form.nropatios }}
+                                </div>
+                                <div class="form-group col-3">
+                                    <label for="id_nroareatalleres">Número de talleres o áreas de trabajo</label>   
+                                      {{ form.nroareatalleres }}
+                                </div>
+                               <div class="form-group col-3">
+                                    <label for="id_nroareaprepalimentos">Número de áreas de preparación y/o distrubución de alimentos</label>   
+                                      {{ form.nroareaprepalimentos }}
+                                </div>
+                             </div>
+                          </div>
+                         </div>                      
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">3. Evaluación.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+                  <!-- inline form for NovlcReg Tipo 3 start -->
+                  <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.itemactacentrocarcelario as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="itemactacentrocarcelario-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="itemactacentrocarcelario-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                          <!-- <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Item a evaluar:</h4>
+                          </div> -->
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Item a evaluar<span style="color: red;" class="required">*</span></th>                                  
+                                  <th>evaluacion <span style="color: red;" class="required">*</span></th>  
+                                  <th>Puntaje <span style="color: red;" class="required">*</span></th> 
+                                  <th>Habilitada <span style="color: red;" class="required">*</span></th> 
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-itemactacentrocarcelario">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="itemactacentrocarcelario-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {% if formss.habilitada  %}
+                                                   {{field}}                              
+                                                   {% endif %}
+
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#itemactacentrocarcelario{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="itemactacentrocarcelario{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="itemactacentrocarcelarioLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="itemactacentrocarcelarioLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar item a evaluar?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actaestcarcelario_item' formss.instance.pk %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-itemactacentrocarcelario-button" class="btn btn-secondary add-itemactacentrocarcelario">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+
+                      {% endwith %}
+                      
+
+
+                                
+                              </div>
+                            </div>
+                          </div>
+
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">Concepto.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">  
+
+                                <div class="form-group col-3">
+                                    <label for="id_puntaje">Puntaje</label>   
+                                      {{ form.puntaje }}                                    
+                                 </div>                              
+                                 <div class="form-group col-3">
+                                    <label for="id_concepto">Concepto</label>   
+                                      {{ form.concepto }}  
+                                 </div>
+                                 
+                              </div>
+                              </div>
+                            </div>
+
+                            <div class="card border-dark mb-12" style="margin-top: 5px;" >
+                              <div class="card-header" style="font-weight: bold; ">Relación de muestras tomadas en el establecimiento</div>
+                              <div class="card-body text-dark">
+                             <div class="row">
+                                  <div class="form-group col-6">
+                                    <label for="id_nromuestrastomadas">Número total de muestras tomadas</label>   
+                                      {{ form.nromuestrastomadas }} 
+                                  </div>
+                                  <div class="form-group col-6">
+                                    <label for="id_nroactatomamuestra">Número del acta de toma de muestras</label>   
+                                      {{ form.nroactatomamuestra }} 
+                                  </div>
+                              </div>
+                             </div>
+                            </div>
+
+                            <div class="card border-dark mb-12" style="margin-top: 5px;" >
+                              <div class="card-header" style="font-weight: bold; ">Requerimiento sanitario</div>
+                              <div class="card-body text-dark">
+                             <div class="row">
+                                 <div class="form-group col-12">  
+                                      {{ form.requerimiento }} 
+                                  </div>
+                                  
+                              </div>
+                             </div>
+                            </div>
+
+                            <div class="card border-dark mb-12" style="margin-top: 5px;">
+                              <div class="card-header" style="font-weight: bold; ">Observación por parte de la autoridad sanitaria</div>
+                              <div class="card-body text-dark">
+                             <div class="row">
+                                 <div class="form-group col-12">     
+                                      {{ form.observacionautsan }} 
+                                  </div>
+                                  
+                              </div>
+                             </div>
+                            </div>
+
+                            <div class="card border-dark mb-12" style="margin-top: 5px;" >
+                              <div class="card-header" style="font-weight: bold; ">Observación por parte de el establecimiento</div>
+                              <div class="card-body text-dark">
+                             <div class="row">
+                                 <div class="form-group col-12">  
+                                      {{ form.observacionestable }} 
+                                  </div>
+                                  
+                              </div>
+                             </div>
+                            </div>
+
+                            <div class="card border-dark mb-12" style="margin-top: 5px;">
+                              <div class="card-header" style="font-weight: bold; ">Información de tipo medida sanitaria de seguridad preventiva</div>
+                              <div class="card-body text-dark">
+                             <div class="row">
+                                 <div class="form-group col-2">
+                                 <label for="id_clausuratemptotal">Clausura temporal total</label>   
+                                      {{ form.clausuratemptotal }} 
+                                  </div>
+                                  <div class="form-group col-2">
+                                 <label for="id_clausuratemparcial">Clausura temporal parcial</label>   
+                                      {{ form.clausuratemparcial }} 
+                                  </div>
+
+                                  <div class="form-group col-2">
+                                 <label for="id_susparcialtrabajo">Suspensión parcial de trabajos o servicios</label>   
+                                      {{ form.susparcialtrabajo }} 
+                                  </div>
+                                  <div class="form-group col-2">
+                                 <label for="id_susptotaltrabservicio">Suspensión total de trabajos o servicios</label>   
+                                      {{ form.susptotaltrabservicio }} 
+                                  </div>
+                                   <div class="form-group col-4">
+                                 <label for="id_aislamiento">Aislamiento o internación de personas para evitar la transmisión de enfermedades</label>   
+                                      {{ form.aislamiento }} 
+                                  </div>
+                              </div>
+                              <div class="row">
+                                 <div class="form-group col-1">
+                                     <label for="id_decomiso">Decomiso</label>   
+                                      {{ form.decomiso }} 
+                                 </div>                                
+                                 <div class="form-group col-3">
+                                     <label for="id_destruccion">Destrucción o desnaturalización</label>   
+                                      {{ form.destruccion }} 
+                                 </div> 
+                                 <div class="form-group col-2">
+                                     <label for="id_congelacion">Congelación</label>   
+                                      {{ form.congelacion }} 
+                                 </div> 
+                                 <div class="form-group col-6">
+                                     <label for="id_capturanimales">Captura y observación de animales sospechosos de enfermedades transmisibles</label>   
+                                      {{ form.capturanimales }} 
+                                 </div>     
+                              </div>
+                              <div class="row">
+                                <div class="form-group col-3">
+                                     <label for="id_vacunacion">Vacunación personas o animales</label>   
+                                      {{ form.vacunacion }} 
+                                 </div>                                 
+                                 <div class="form-group col-5">
+                                     <label for="id_controlinsectos">Control de insectos u otra fauna nociva o transmisora de enfermedades</label>   
+                                      {{ form.controlinsectos }} 
+                                 </div> 
+                                 <div class="form-group col-4">
+                                     <label for="id_desocupacion">Desocupación o desalojamiento de establecimientos o vivienda</label>   
+                                      {{ form.desocupacion }} 
+                                 </div> 
+                              </div>
+                              <div class="row">
+                                <div class="form-group col-4">
+                                     <label for="id_nroactamedidasanitaria">Númeo del acta de medida sanitaria    </label>
+                                      {{ form.nroactamedidasanitaria }} 
+
+                                 </div>
+                                
+                              </div>
+                             </div>
+                            </div>
+
+                            <div class="card border-dark mb-12" style="margin-top: 5px;">
+                              <div class="card-header" style="font-weight: bold; ">Plazo cumplimiento de exigencias</div>
+                              <div class="card-body text-dark">
+                             <div class="row">
+                                 <div class="form-group col-3">
+                                 <label for="id_diashabileplazo">Días hábiles</label>   
+                                      {{ form.diashabileplazo }} 
+                                  </div>
+                                  <div class="form-group col-3">
+                                    <label for="id_diashabileplazo">Fecha inicio plazo</label>    
+                                    {{ form.fechainiplazo }} 
+                                  </div>
+                                   <div class="form-group col-3">
+                                    <label for="id_diashabileplazo">Fecha límite de plazo</label>    
+                                    {{ form.fechafinplazo }} 
+                                  </div>
+                                  
+                              </div>
+                             </div>
+                            </div>
+
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">Usuarios que atienden la visita.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+                                <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.atiendeactacentrocarcelario as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="atiendeactacentrocarcelario-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="atiendeactacentrocarcelario-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                         <!--  <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Usuario que atiende la visita</h4>
+                          </div> -->
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Documento <span style="color: red;" class="required">*</span></th>
+                                  <th>Identificación <span style="color: red;" class="required">*</span></th>
+                                  <th>Nombre <span style="color: red;" class="required">*</span></th>
+                                  <th>Cargo <span style="color: red;" class="required">*</span></th>
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-atiendeactacentrocarcelario">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="atiendeactacentrocarcelario-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="atiendeactacentrocarcelario{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="atiendeactacentrocarcelario{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="atiendeactacentrocarcelarioLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="atiendeactacentrocarcelarioLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar El usuario que atendió la visita?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actaestcarcelario_ati' formss.instance.pk %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-atiendeactacentrocarcelario-button" class="btn btn-secondary add-atiendeactacentrocarcelario">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+                      {% endwith %}
+                      <!-- inline form for Images end -->
+
+                                
+                              </div>
+                            </div>
+                          </div>
+
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">5.Funcionarios.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+
+                                <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.funcionariosactacentrocarcelario as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="funcionariosactacentrocarcelario-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="funcionariosactacentrocarcelario-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                          <!-- <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Funcionarios</h4>
+                          </div> -->
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Funcionario <span style="color: red;" class="required">*</span></th>                                  
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-funcionariosactacentrocarcelario">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="funcionariosactacentrocarcelario-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#funcionariosactacentrocarcelario{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="funcionariosactacentrocarcelario{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="funcionariosactacentrocarcelarioLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="funcionariosactacentrocarcelarioLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar el funcionario?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actaestcarcelario_func' formss.instance.pk %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-funcionariosactacentrocarcelario-button" class="btn btn-secondary add-funcionariosactacentrocarcelario">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+                      {% endwith %}
+                      <!-- inline form for Images end -->
+
+                                
+                              </div>
+                            </div>
+                          </div>
+
+                          
+                {% for field in form %}
+                <p>                    
+                {% for error in field.errors %}
+                    {{ error }} - {{ field.label_tag }}
+                {% endfor %}
+                </p>
+                {% endfor %}
+
+                           <div class="dropdown-divider"></div>
+                             <div class="row">
+                               <div class="col">
+                                 <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span>Guardar</button>
+                              
+                                <a href="{% url 'sam:actaestcarcelario_list' idestablecimiento %}" class="btn btn-success">Cancelar</a>
+                               </div>
+                             </div> 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  </form>
+{% endblock page_content %}
+
+{% block js_page %}
+   
+<script>
+
+ $(document).ready(function() {
+
+    // when user clicks add more btn of seguimiento
+      
+      $('.add-itemactacentrocarcelario').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-itemactacentrocarcelario').children().length;
+          var tmplMarkup = $('#itemactacentrocarcelario-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-itemactacentrocarcelario').append(compiledTmpl);
+  
+          // update form count
+          $('#id_itemactacentrocarcelario-TOTAL_FORMS').attr('value', count+1);
+      });
+
+  
+      $('.add-atiendeactacentrocarcelario').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-atiendeactacentrocarcelario').children().length;
+          var tmplMarkup = $('#atiendeactacentrocarcelario-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-atiendeactacentrocarcelario').append(compiledTmpl);
+  
+          // update form count
+          $('#id_atiendeactacentrocarcelario-TOTAL_FORMS').attr('value', count+1);
+      });
+
+       $('.add-funcionariosactacentrocarcelario').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-funcionariosactacentrocarcelario').children().length;
+          var tmplMarkup = $('#funcionariosactacentrocarcelario-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-funcionariosactacentrocarcelario').append(compiledTmpl);
+  
+          // update form count
+          $('#id_funcionariosactacentrocarcelario-TOTAL_FORMS').attr('value', count+1);
+      });
+
+  
+  });
+</script>
+
+<script>
+
+$(function(){
+    $("#id_fecha, #id_fechaultinspeccion, #id_fechainiplazo, #id_fechafinplazo").datetimepicker({
+        format:'d/m/Y',
+        timepicker:false
+    });
+
+    $('#id_municipio').select2({
+      placeholder: "Seleccione  la ciudad",
+      allowClear: true
+    });
+
+    $('.  ').select2({
+      placeholder: "Seleccione Item a evaluar",
+      allowClear: true
+    });
+
+    
+    
+ });
+</script>
+{% endblock js_page %}
+

@@ -1,0 +1,85 @@
+{% extends 'base/basesam.html' %}
+
+{% block page_content %}
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    {% if obj %}
+    <form  method='POST' role='form' id="frmembarcacion" action = "{% url 'sam:embarcacion_edit' obj.pk %}"> 
+    {% else %}  
+    <form  method='POST' role='form' id="frmembarcacion"  action = "{% url 'sam:embarcacion_new' %}">
+    {% endif %}
+        {% csrf_token %}
+              <div class="col-xl-12 col-md-12 mb-12">
+                {% if obj %}
+                  <div class="card border-left-warning shadow h-100 py-1">
+                {% else %}    
+                  <div class="card border-left-success shadow h-100 py-1">
+                 {%  endif %}   
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                              {% if obj %} Editar {% else %} Nuevo {% endif %} Embarcación
+                           </div>                      
+                           <div class="dropdown-divider"></div> 
+                           <div class="col-12"> {# div.col_1 #}
+                              <div class="row"> 
+                                <div class="form-group col-4">
+                                    <label for="id_matricula">Matricula</label>
+                                      <br>
+                                      {{ form.matricula }}                                    
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="form-group col-12">
+                                    <label for="id_nombre">Nombre de la embarcación</label>
+                                      <br>
+                                      {{ form.nombre }}                                    
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="form-group col-12">
+                                    <label for="id_pais">Nacionalidad</label>
+                                      <br>
+                                      {{ form.pais }}                                    
+                                  </div>                                 
+                              </div>
+                          </div>
+                           
+                          <!-- {{ form.as_p }} -->
+                     
+                           <div class="dropdown-divider"></div>
+                             <div class="row">
+                               <div class="col">
+                                 <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span>Guardar</button>
+                                  <a class="btn btn-success"href="{% url 'sam:embarcacion_list' 0 %}">Cancelar</a>
+
+                               </div>
+                             </div> 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+    </form>
+  </div>
+</div>
+
+{% endblock page_content %}
+
+{% block js_page %}
+
+<script>
+
+$(document).ready(function() 
+{
+    $('#id_pais').select2({
+      placeholder: "Seleccione país de nacionalidad",
+      allowClear: true
+    }); 
+});
+
+  </script>
+  
+{% endblock js_page %}
+

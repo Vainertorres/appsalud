@@ -1,0 +1,130 @@
+{% extends 'base/baseres4505.html' %}
+
+{% block page_content %}
+
+
+    {% if obj %}
+    <form  method='POST' role='form' action = "{% url 'res4505:regctrl_edit' obj.pk %}"> 
+    {% else %}  
+    <form  method='POST' role='form' action = "{% url 'res4505:regctrl_new' %}">
+    {% endif %}
+        {% csrf_token %}
+              <div class="col-xl-12 col-md-12 mb-12">
+                {% if obj %}
+                  <div class="card border-left-warning shadow h-100 py-2">
+                {% else %}    
+                  <div class="card border-left-success shadow h-100 py-2">
+                 {%  endif %}   
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                              {% if obj %} Editar {% else %} Nuevo {% endif %} Registro tipo 1
+                          </div>                      
+                           <div class="dropdown-divider"></div> 
+                            <div class="row">
+                              
+                                  <div class="form-group col-2">
+                                        <label for="id_tiporegistro">Tipo registro</label>
+                                        {{form.tiporegistro}}                               
+                                  </div> 
+
+                                  <div class="form-group col-2">
+                                        <label for="id_codigoentidad">Código entidad</label>
+                                        {{form.codigoentidad}}                               
+                                  </div>                                    
+
+                                  <div class="form-group col-4">
+                                        <label for="id_eps">Eps</label>
+                                        {{form.eps}}                               
+                                  </div> 
+                                  <div class="form-group col-4">
+                                    <label for="id_departamento">Departamento</label>
+                                    {{form.departamento}}                               
+                              </div>
+                            </div>
+                            <div class="row">
+                              
+                              <div class="form-group col-4">
+                                    <label for="id_municipio">Municipio</label>
+                                    {{form.municipio}}                               
+                              </div>
+                              <div class="form-group col-2">
+                                    <label for="id_fechainicial">Fecha Inicial</label>
+                                    {{form.fechainicial}}                               
+                              </div> 
+                              <div class="form-group col-2">
+                                    <label for="id_fechafinal">Fecha final</label>
+                                      {{form.fechafinal}}                               
+                                  </div> 
+                                  <div class="form-group col-2">
+                                        <label for="id_nrototalreg">Nro Total reg.</label>
+                                        {{form.nrototalreg}}                               
+                                  </div>                              
+                                  <div class="form-group col-2">
+                                        <label for="id_actual">Reporte Actual</label>
+                                        {{form.actual}}                               
+                                  </div>                              
+                            </div>
+
+                        <div class="col-xl-12 col-md-12 mb-12">
+                           <div class="card border-left-success shadow h-100 py-2">
+                             <div class="card-body"> 
+                                <div class="table">
+                                  <table>
+                                    <th>
+                                      <td>consec</td>
+                                      <td>Ips</td>
+                                      <td>Paciente</td>
+                                      <th></th>
+                                    </th>
+                                    <tbody>
+                                      
+                                    </tbody>
+                                  </table>
+                                  
+                                </div>
+                              </div>
+                            </div>
+                         </div>
+                            
+                           
+                           <div class="dropdown-divider"></div>
+                             <div class="row">
+                               <div class="col">
+                                 <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span>Guardar</button>
+                                <a class="btn btn-success" href="{% url 'res4505:regctrl_list' %}">Cancelar</a>                               
+                               </div>
+                             </div> 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+    </form>
+
+
+	
+{% endblock page_content %}
+
+{% block js_page %}
+
+<script>
+
+$(function(){
+
+  $("#id_fechainicial, #id_fechafinal").datetimepicker({
+    format:'d/m/Y',
+    timepicker:false
+  });
+
+  $('#id_eps').select2({
+      placeholder: "Seleccione una EPS",
+      allowClear: true
+    });
+         
+ });
+
+ </script> 
+{% endblock js_page %}
+

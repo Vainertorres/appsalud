@@ -1,0 +1,119 @@
+{% extends 'base/basebdua.html' %}
+
+{% load static %}
+
+{% block head_list %}
+   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
+
+{% endblock%}
+
+{% block page_content %}
+	<div class="card shadow mb-4">
+       <!-- Card Header - Dropdown -->
+       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+       <h6 class="m-0 font-weight-bold text-primary">{{titulo}}</h6>
+  </div>   
+                
+     <!-- Card Body -->
+    <div class="card-body"> 
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="form-group">
+           <label>Cruce de base de datos: subsidiado versus contributivo</label>           
+          </div>
+         </div>                     
+      </div>             
+      <hr>  
+
+      <table id="tabla" class="display nowrap" style="width:100%" class="table table-bordered"       
+      data-toggle="table"     
+      data-locale="es-MX">
+        <thead>  
+        <tr>
+          <th>Doc RS</th>
+          <th>Identificacion RS</th>
+          <th>Nombre 1 RS</th>
+          <th>Nombre 2 RS</th>
+          <th>Apellido 1 RS</th>
+          <th>Apellido 2 RS</th>         
+          <th>Fec. Nac RS</th>    
+          <th>Eps Subs.</th>           
+          <th>Doc RC</th>           
+          <th>Identificación RC</th>                     
+          <th>Nombres apellidos</th>           
+          <th>Fecha Nac RC</th>           
+          <th>Eps Cont.</th>           
+         </tr>      
+        </thead>  
+        <tbody>
+          {% if obj %}
+            {% for item in obj %}
+              <tr>
+                <td>{{ item.tdsub }}</td>
+                <td>{{ item.identsub }}</td>
+                <td>{{ item.name1sub }}</td>
+                <td>{{ item.name2sub }}</td>
+                <td>{{ item.ape1sub }} </td>
+                <td>{{ item.ape2sub }} </td>
+                <td>{{ item.fnsub|date:"d/m/Y" }}</td>                                
+                <td>{{ item.epssub }}</td>
+                <td>{{ item.tdcont }}</td>
+                <td>{{ item.identcont }}</td>
+                <td>{{ item.namecont }}</td>
+                <td>{{ item.fechanacont|date:"d/m/Y" }}</td>
+                <td>{{ item.epscont }}</td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+                     
+        </tbody>
+
+     </table>
+   </div>
+  </div>
+
+{% endblock page_content %}
+
+{% block js_page %}
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#tabla').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'excelHtml5',
+                    'pdfHtml5'
+                ],
+                language: {
+        "decimal": "",
+        "emptyTable": "No hay información",
+        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ Registros",
+        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 Registros",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Registros",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "No se encontraron resultados",
+        "paginate": {
+            "first": "<span class='fa fa-angle-double-left'></span>",
+            "last": "<span class='fa fa-angle-double-right'></span>",
+            "next": "<span class='fa fa-angle-right'></span>",
+            "previous": "<span class='fa fa-angle-left'></span>"
+        }
+        
+      },
+            });
+        });
+    </script>
+  
+{% endblock %}

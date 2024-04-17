@@ -1,0 +1,510 @@
+{% extends 'base/basesam.html' %}
+
+{% block page_content %}
+
+    {% if obj %}
+    <form  method='POST' role='form' action = "{% url 'sam:actavivtrans_edit' idestablecimiento codacta obj.pk %}"> 
+    {% else %}  
+    <form  method='POST' role='form' action = "{% url 'sam:actavivtrans_create' idestablecimiento codacta %}">
+    {% endif %}
+        {% csrf_token %}
+              <div class="col-xl-12 col-md-12 mb-12">
+                {% if obj %}
+                  <div class="card border-left-warning shadow h-100 py-2">
+                {% else %}    
+                  <div class="card border-left-success shadow h-100 py-2">
+                 {%  endif %}   
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                               {% if obj %} Editar {% else %} Nuevo {% endif %} Acta de vivienda transitoria: {{nomestablecimiento}}
+                           </div>                      
+                           <div class="dropdown-divider"></div> 
+
+                             <input type="hidden" id="id_establecimiento" name="establecimiento" value="{{ idestablecimiento }}">
+                           
+                           <div class="col-12">
+                            <div class="card border-dark mb-12" >
+                              <div class="card-header" style="font-weight: bold; ">1. Datos del establecimiento.</div>
+                              <div class="card-body text-dark">
+                            <div class="row">
+                                <div class="form-group col-12">
+                                    <label for="id_establecimiento" style="font-weight: bold; font-size: 25px; color:blue;">Establecimiento: {{ nomestablecimiento }}</label>  
+                                 </div>
+                             </div>
+                             <div class="row">
+                                 <div class="form-group col-2">
+                                    <label for="id_fecha">Fecha</label>   
+                                      {{ form.fecha }}                                    
+                                 </div>
+                                 <div class="form-group col-2">
+                                    <label for="id_nroacta">Acta Nro.</label>   
+                                      {{ form.nroacta }}                                    
+                                 </div>
+
+                                 <div class="form-group col-3">
+                                    <label for="id_tipoacta">tipoacta</label>   
+                                      {{ form.tipoacta }}                     
+                                 </div>
+                                 
+                                 <div class="form-group col-2">
+                                    <label for="id_motivovisita">Motivo de visita</label>   
+                                      {{ form.motivovisita }}                     
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_municipio">Ciudad</label>   
+                                      {{ form.municipio }}
+                                 </div>
+                             </div>
+
+                             <div class="row">
+                                  <div class="form-group col-2">
+                                    <label for="id_inspeccionanterior">Inpección anterior</label>   
+                                      {{ form.inspeccionanterior }}
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_fechaultinspeccion">Fecha Ult. Concepto</label>   
+                                      {{ form.fechaultinspeccion }}
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_conceptoanterior">Concepto anterior</label>   
+                                      {{ form.conceptoanterior }}
+                                 </div>      
+                                 <div class="form-group col-2">
+                                    <label for="id_porcumplimientoanterior">% Cumplimiento</label> 
+                                      {{ form.porcumplimientoanterior }}
+                                 </div>    
+                                 <div class="form-group col-2">
+                                    <label for="id_nroactanterior">Nro Acta anterior</label>  {{ form.nroactanterior }}
+                                 </div>                                                     
+                             </div>
+                             </div>
+                         </div>
+
+                       
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">2. Evaluación.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+                  <!-- inline form for NovlcReg Tipo 3 start -->
+                  <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.itemactaviviendatransitoria as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="itemactaviviendatransitoria-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="itemactaviviendatransitoria-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                          <!-- <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Item a evaluar:</h4>
+                          </div> -->
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Item a evaluar<span style="color: red;" class="required">*</span></th>                                  
+                                  <th>evaluacion <span style="color: red;" class="required">*</span></th>  
+                                  <th>Puntaje <span style="color: red;" class="required">*</span></th> 
+                                  <th>Habilitada <span style="color: red;" class="required">*</span></th> 
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-itemactaviviendatransitoria">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="itemactaviviendatransitoria-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {% if formss.habilitada  %}
+                                                   {{field}}                              
+                                                   {% endif %}
+
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#itemactaviviendatransitoria{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="itemactaviviendatransitoria{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="itemactaviviendatransitoriaLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="itemactaviviendatransitoriaLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar item a evaluar?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actavivtransitem' formss.instance.pk codacta %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-itemactaviviendatransitoria-button" class="btn btn-secondary add-itemactaviviendatransitoria">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+
+                      {% endwith %}
+                      
+
+
+                                
+                              </div>
+                            </div>
+                          </div>
+
+                         
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">3.Requerimientos sanitarios.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+                                <div class="form-group col-12">
+                                    <label for="id_requerimiento">Requerimientos</label>   
+                                      {{ form.requerimiento }}                    
+                                 </div>
+                                
+                              </div>
+                            </div>
+                          </div>
+
+                           <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">4.Observaciones.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+                                <div class="form-group col-6">
+                                    <label for="id_observacionautsan">Observación autoridad sanitaria</label>   
+                                      {{ form.observacionautsan }}                    
+                                 </div>
+
+                                 <div class="form-group col-6">
+                                    <label for="id_observacionestable">Observación por parte del establecimiento</label>   
+                                      {{ form.observacionestable }}                    
+                                 </div>                                
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">5.Usuarios que atienden la visita.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+                                <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.atiendeactaviviendatransitoria as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="atiendeactaviviendatransitoria-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="atiendeactaviviendatransitoria-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                         <!--  <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Usuario que atiende la visita</h4>
+                          </div> -->
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Documento <span style="color: red;" class="required">*</span></th>
+                                  <th>Identificación <span style="color: red;" class="required">*</span></th>
+                                  <th>Nombre <span style="color: red;" class="required">*</span></th>
+                                  <th>Cargo <span style="color: red;" class="required">*</span></th>
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-atiendeactaviviendatransitoria">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="atiendeactaviviendatransitoria-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="atiendeactaviviendatransitoria{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="atiendeactaviviendatransitoria{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="atiendeactaviviendatransitoriaLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="atiendeactaviviendatransitoriaLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar El usuario que atendió la visita?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actavivtransati' formss.instance.pk codacta %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-atiendeactaviviendatransitoria-button" class="btn btn-secondary add-atiendeactaviviendatransitoria">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+                      {% endwith %}
+                      <!-- inline form for Images end -->
+
+                                
+                              </div>
+                            </div>
+                          </div>
+
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">6.Funcionarios.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+
+                                <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.funcionariosactaviviendatransitoria as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="funcionariosactaviviendatransitoria-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="funcionariosactaviviendatransitoria-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                          <!-- <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Funcionarios</h4>
+                          </div> -->
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Funcionario <span style="color: red;" class="required">*</span></th>                                  
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-funcionariosactaviviendatransitoria">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="funcionariosactaviviendatransitoria-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#funcionariosactaviviendatransitoria{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="funcionariosactaviviendatransitoria{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="funcionariosactaviviendatransitoriaLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="funcionariosactaviviendatransitoriaLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar el funcionario?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actavivtransfunc' formss.instance.pk codacta %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-funcionariosactaviviendatransitoria-button" class="btn btn-secondary add-funcionariosactaviviendatransitoria">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+                      {% endwith %}
+                      <!-- inline form for Images end -->
+
+                                
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">7.Concepto.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">  
+
+                                <div class="form-group col-3">
+                                    <label for="id_puntaje">Puntaje</label>   
+                                      {{ form.puntaje }}                                    
+                                 </div>                              
+                                 <div class="form-group col-3">
+                                    <label for="id_concepto">Concepto</label>   
+                                      {{ form.concepto }}                                    
+                                 </div>
+                                 
+                              </div>
+                              </div>
+                            </div>
+                          
+                {% for field in form %}
+                <p>                    
+                {% for error in field.errors %}
+                    {{ error }} - {{ field.label_tag }}
+                {% endfor %}
+                </p>
+                {% endfor %}
+
+                           <div class="dropdown-divider"></div>
+                             <div class="row">
+                               <div class="col">
+                                 <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span>Guardar</button>
+                              
+                                <a href="{% url 'sam:actavivtrans_list' idestablecimiento codacta %}" class="btn btn-success">Cancelar</a>
+                               </div>
+                             </div> 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  </form>
+{% endblock page_content %}
+
+{% block js_page %}
+   
+<script>
+
+ $(document).ready(function() {
+
+    // when user clicks add more btn of seguimiento
+      
+      $('.add-itemactaviviendatransitoria').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-itemactaviviendatransitoria').children().length;
+          var tmplMarkup = $('#itemactaviviendatransitoria-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-itemactaviviendatransitoria').append(compiledTmpl);
+  
+          // update form count
+          $('#id_itemactaviviendatransitoria-TOTAL_FORMS').attr('value', count+1);
+      });
+
+  
+      $('.add-atiendeactaviviendatransitoria').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-atiendeactaviviendatransitoria').children().length;
+          var tmplMarkup = $('#atiendeactaviviendatransitoria-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-atiendeactaviviendatransitoria').append(compiledTmpl);
+  
+          // update form count
+          $('#id_atiendeactaviviendatransitoria-TOTAL_FORMS').attr('value', count+1);
+      });
+
+       $('.add-funcionariosactaviviendatransitoria').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-funcionariosactaviviendatransitoria').children().length;
+          var tmplMarkup = $('#funcionariosactaviviendatransitoria-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-funcionariosactaviviendatransitoria').append(compiledTmpl);
+  
+          // update form count
+          $('#id_funcionariosactaviviendatransitoria-TOTAL_FORMS').attr('value', count+1);
+      });
+
+  
+  });
+</script>
+
+<script>
+
+$(function(){
+    $("#id_fecha, #id_fechaultinspeccion").datetimepicker({
+        format:'d/m/Y',
+        timepicker:false
+    });
+
+    $('#id_municipio').select2({
+      placeholder: "Seleccione  la ciudad",
+      allowClear: true
+    });
+
+    $('.  ').select2({
+      placeholder: "Seleccione Item a evaluar",
+      allowClear: true
+    });
+
+    
+    
+ });
+</script>
+{% endblock js_page %}
+

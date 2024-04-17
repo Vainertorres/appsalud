@@ -1,0 +1,223 @@
+{% extends 'base/basesam.html' %}
+
+{% block page_content %}
+
+    {% if obj %}
+    <form  method='POST' role='form' action = "{% url 'sam:preguntas_edit' codacta obj.pk %}"> 
+    {% else %}  
+    <form  method='POST' role='form' action = "{% url 'sam:preguntas_create' codacta %}">
+    {% endif %}
+        {% csrf_token %}
+              <div class="col-xl-12 col-md-12 mb-12">
+                {% if obj %}
+                  <div class="card border-left-warning shadow h-100 py-2">
+                {% else %}    
+                  <div class="card border-left-success shadow h-100 py-2">
+                 {%  endif %}   
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                               {% if obj %} Editar {% else %} Nuevo {% endif %} Pregunta: {{ tipoacta }}
+                           </div>                      
+                           <div class="dropdown-divider"></div> 
+
+                             <input type="hidden" id="id_establecimiento" name="establecimiento" value="{{ idestablecimiento }}">
+                           
+                          <div class="col-12">
+                            <div class="row">
+                                 <div class="form-group col-2">
+                                    <label for="id_idpregunta">codigo</label>   
+                                      {{ form.idpregunta }}         
+                                 </div>
+                                 <div class="form-group col-10">
+                                    <label for="id_descripcion">Pregunta</label>   
+                                      {{ form.descripcion }}         
+                                 </div>
+                            </div>                         
+
+                            <div class="row">
+                                 <div class="form-group col-6">
+                                    <label for="id_bloque">Bloque</label>
+                                     <select name="bloque" id="id_bloque" class="form-control">
+                                        <option value="0">-----------</option>
+                                        {% for item in bloque %}
+                                           {% if obj %}
+                                              {% if obj.bloque_id == item.id %}
+                                   
+                                              <option value="{{item.id}}" selected="">{{item.descripcion}}</option>
+                                              {% else %}
+                                              <option value="{{item.id}}">{{item.descripcion}}</option>                 
+                                              {% endif %}
+                                           {% else %}
+                                              <option value="{{item.id}}">{{item.descripcion}}</option>
+                                           {% endif %}
+                                           }
+                                           }
+                                           }
+                                        {% endfor %}                                        
+                                      </select>     
+                                 </div>
+                                
+                                 <div class="form-group col-2">
+                                    <label for="id_orden">orden</label>   
+                                      {{ form.orden }}         
+                                 </div>
+                                 <div class="form-group col-1">
+                                    <label for="id_habilitada">Pregunta?</label>   
+                                      {{ form.habilitada }}         
+                                 </div>
+                            </div>
+                          
+                          
+                       
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">2. Evaluación.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+                  <!-- inline form for NovlcReg Tipo 3 start -->
+                  <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.evaluacionpregunta as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="evaluacionpregunta-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="evaluacionpregunta-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                          <!-- <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Item a evaluar:</h4>
+                          </div> -->
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>pregunta<span style="color: red;" class="required">*</span></th>                                  
+                                  <th>Puntaje <span style="color: red;" class="required">*</span></th>                                   
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-evaluacionpregunta">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="evaluacionpregunta-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>  
+                                                   {{field}}    
+
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#evaluacionpregunta{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="evaluacionpregunta{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="evaluacionpreguntaLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="evaluacionpreguntaLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar config. Valoración?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_preguntas' formss.instance.pk codacta %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-evaluacionpregunta-button" class="btn btn-secondary add-evaluacionpregunta">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+
+                      {% endwith %}
+                      
+
+
+                                
+                              </div>
+                            </div>
+                          </div>
+
+                       
+
+                       
+
+
+                          
+                {% for field in form %}
+                <p>                    
+                {% for error in field.errors %}
+                    {{ error }} - {{ field.label_tag }}
+                {% endfor %}
+                </p>
+                {% endfor %}
+
+                           <div class="dropdown-divider"></div>
+                             <div class="row">
+                               <div class="col">
+                                 <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span>Guardar</button>
+                              
+                                <a href="{% url 'sam:preguntas_list' codacta %}" class="btn btn-success">Cancelar</a>
+                               </div>
+                             </div> 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  </form>
+{% endblock page_content %}
+
+{% block js_page %}
+   
+<script>
+
+ $(document).ready(function() {
+    $("#id_bloque").val("{{obj.bloque.id}}").change();
+
+    // when user clicks add more btn of seguimiento
+      
+      $('.add-evaluacionpregunta').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-evaluacionpregunta').children().length;
+          var tmplMarkup = $('#evaluacionpregunta-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-evaluacionpregunta').append(compiledTmpl);
+  
+          // update form count
+          $('#id_evaluacionpregunta-TOTAL_FORMS').attr('value', count+1);
+      });
+  
+  });
+</script>
+
+{% endblock js_page %}
+

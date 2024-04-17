@@ -1,0 +1,663 @@
+{% extends 'base/basesam.html' %}
+
+{% block page_content %}
+
+    {% if obj %}
+    <form  method='POST' role='form' action = "{% url 'sam:actaembint_edit' idembarcacion obj.pk %}"> 
+    {% else %}  
+    <form  method='POST' role='form' action = "{% url 'sam:actaembint_create' idembarcacion %}">
+    {% endif %}
+        {% csrf_token %}
+              <div class="col-xl-12 col-md-12 mb-12">
+                {% if obj %}
+                  <div class="card border-left-warning shadow h-100 py-2">
+                {% else %}    
+                  <div class="card border-left-success shadow h-100 py-2">
+                 {%  endif %}   
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                               {% if obj %} Editar {% else %} Nuevo {% endif %} Acta de embarcación internacional: {{nomembarcacion}}
+                           </div>                      
+                           <div class="dropdown-divider"></div> 
+
+                             <input type="hidden" id="id_embarcaciones" name="embarcaciones" value="{{ idembarcacion }}">
+                           
+                           <div class="col-12">
+                            <div class="card border-dark mb-12" >
+                              <div class="card-header" style="font-weight: bold; ">1. Datos de la embarcación.</div>
+                              <div class="card-body text-dark">
+                               <div class="row">
+                                 <div class="form-group col-3">
+                                    <label for="id_fecha">Fecha - Hora</label>   
+                                      {{ form.fecha }}                                    
+                                 </div>
+                                 
+                                 <div class="form-group col-3">
+                                    <label for="id_nroacta">Acta Nro.</label>   
+                                      {{ form.nroacta }}                                    
+                                 </div>                                 
+                                 <div class="form-group col-3">
+                                    <label for="id_municipio">Ciudad</label>   
+                                      {{ form.municipio }}                                    
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_visitaen">Visita en</label>   
+                                      {{ form.visitaen }} 
+                                 </div>
+                             </div>
+                             <div class="row">
+                                <div class="form-group col-6">
+                                    <label for="id_establecimiento" style="font-weight: bold; ">Embarcación:</label>  
+                                    <br>
+                                     <p style="color:blue; font-size: 30px; font-weight: bold;"> {{ nomembarcacion }}</p>                            
+                                 </div>
+                                 <div class="form-group col-2">
+                                    <label for="id_nacionalidad">Nacionalidad</label>   
+                                      {{ form.nacionalidad }}                                    
+                                 </div>
+                                 <div class="form-group col-2">
+                                    <label for="id_procedencia">Procedencia</label> 
+                                    {{ form.procedencia }}                              
+                                 </div>
+                                 <div class="form-group col-2">
+                                    <label for="id_destino">Destino</label>   
+                                      {{ form.destino }}                               
+                                 </div>
+                             </div>
+                             <div class="row">
+                                <div class="form-group col-3">
+                                  <label for="id_nombrecapitan">Nombre del capitan</label>
+                                      {{ form.nombrecapitan }}                          
+                                </div>
+                                <div class="form-group col-3">
+                                  <label for="id_agencianaviera">Agencia naviera</label>
+                                      {{ form.agencianaviera }}                          
+                                </div>
+                                <div class="form-group col-2">
+                                  <label for="id_tiempoenpuerto">Tiempo en puerto</label>
+                                      {{ form.tiempoenpuerto }}                          
+                                </div>
+                                <div class="form-group col-1">
+                                  <label for="id_clasetiempo">En</label>
+                                      {{ form.clasetiempo }}                          
+                                </div>
+                                <div class="form-group col-3">
+                                  <label for="id_clasetiempo">Tipo Carga</label>
+                                      {{ form.tipocarga }}                          
+                                </div>                                
+                              </div>
+                            </div>
+                            </div>
+                           
+                             
+                             <div class="card border-dark mb-12" style="margin-top: 5px;" >
+                              <div class="card-header" style="font-weight: bold; ">2. Certificado de excención del control de sanidad  a bordo.</div>
+                              <div class="card-body text-dark">
+                                <div class="row">
+                                  <div class="form-group col-3">
+                                  <label for="id_ctrlsanidadvigente">Control de sanidad vigente</label>
+                                      {{ form.ctrlsanidadvigente }}                     
+                                   </div>
+                                  <div class="form-group col-2">
+                                  <label for="id_fechaexpcertsanidad">Fecha Exp</label>
+                                      {{ form.fechaexpcertsanidad }}                      
+                                   </div>
+                                  <div class="form-group col-3">
+                                  <label for="id_paisexpcertificado">Lugar de expedición</label>
+                                      {{ form.paisexpcertificado }}                      
+                                   </div>
+                                   <div class="form-group col-2">
+                                  <label for="id_fechavencecertsanidad">Fecha vence</label>
+                                      {{ form.fechavencecertsanidad }}                      
+                                   </div>
+                                   <div class="form-group col-2">
+                                  <label for="id_renuevacertificado">Se renueva</label>
+                                      {{ form.renuevacertificado }}                      
+                                   </div>
+                                </div>                              
+                            </div>
+                            </div>
+                            
+                            <div class="card border-dark mb-12" style="margin-top: 5px;" >
+                              <div class="card-header" style="font-weight: bold;" >3. Enfermedades encontradas.</div>
+                              <div class="card-body text-dark">
+                              <div class="row">
+                                <div class="form-group col-6">
+                                  <label for="id_enfermedades">Enfermedades encontradas</label>
+                                      {{ form.enfermedades }}                          
+                                </div>
+                                <div class="form-group col-2">
+                                  <label for="id_enfermedades">Nro tripulantes</label>
+                                      {{ form.nrotripulantes }}                          
+                                </div>
+                                <div class="form-group col-2">
+                                  <label for="id_enfermedades">Nro pasajeros</label>
+                                      {{ form.nropasajeros }}                          
+                                </div><div class="form-group col-2">
+                                  <label for="id_nropolisones">Nro polisones</label>
+                                      {{ form.nropolisones }}                          
+                                </div>
+                              </div>
+                              </div>
+                            </div>
+
+                            <div class="card border-dark mb-12" style="margin-top: 5px;">
+                              <div class="card-header" style="font-weight: bold;">4. Certificado de inmunización vacunación contra fiebre amarilla. </div>
+                              <div class="card-body text-dark">
+                              <div class="row">
+                                <div class="form-group col-4">
+                                  <label for="id_vacunafiebreamarilla">Vacunado contra fiebre amarilla</label>
+                                      {{ form.vacunafiebreamarilla }}    
+                                </div>
+                                <div class="form-group col-2">
+                                  <label for="id_vacunafiebreamarilla">Vigente</label>
+                                      {{ form.vacunafavigente }}    
+                                </div>
+                                <div class="form-group col-3">
+                                  <label for="id_tiempovigenciadias">Tiempo en días</label>
+                                      {{ form.tiempovigenciadias }}    
+                                </div>
+                                <div class="form-group col-3">
+                                  <label for="id_ordenvacunacionoficial">Orden de vacunación oficial</label>
+                                      {{ form.ordenvacunacionoficial }}    
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+
+                           <div class="card border-dark mb-12" style="margin-top: 5px;">
+                              <div class="card-header" style="font-weight: bold;">5. Lista de puertos de escala en los últimos 15 días. </div>
+                              <div class="card-body text-dark">
+                              <div class="row">
+                                <!-- inline form for NovlcReg Tipo 3 start -->
+
+                  <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.actaembarcacioninterpuerto as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="actaembarcacioninterpuerto-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="actaembarcacioninterpuerto-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                          <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Puertos visitados en los últimos 15 días:</h4>
+                          </div>
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Puerto visitado<span style="color: red;" class="required">*</span></th>
+                                  <th>Cantidad de visitas<span style="color: red;" class="required">*</span></th>          
+
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-actaembarcacioninterpuerto">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="actaembarcacioninterpuerto-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#actaembarcacioninterpuerto{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="actaembarcacioninterpuerto{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="actaembarcacioninterpuertoLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="actaembarcacioninterpuertoLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar el Puerto?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actaembinterpuerto' formss.instance.pk %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-actaembarcacioninterpuerto-button" class="btn btn-secondary add-actaembarcacioninterpuerto">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+
+                      {% endwith %}
+                  
+                                 
+                              </div>
+                            </div>
+                          </div>
+
+                           <div class="card border-dark mb-12" style="margin-top: 5px;">
+                              <div class="card-header" style="font-weight: bold;">6. Requisitos sanitarios. </div>
+                              <div class="card-body text-dark">
+                              <div class="row">
+                                <div class="form-group col-2">
+                                  <label for="id_aguapotable">Agua potable</label>
+                                      {{ form.aguapotable }}    
+                                </div>
+                                <div class="form-group col-4">
+                                  <label for="id_alimentos">Alientos en condiciones sanitarias adecuadas.</label>
+                                      {{ form.alimentos }}    
+                                </div>
+                                <div class="form-group col-3">
+                                  <label for="id_botiquin">Botiquín de primeros auxilios.</label>
+                                      {{ form.botiquin }}    
+                                </div>
+                                <div class="form-group col-3">
+                                  <label for="id_depositobasuras">Deposito de basura en recipientes cerrados.</label>
+                                      {{ form.depositobasuras }}    
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                              <div class="card-header" style="font-weight: bold;">7. Medidas sanitarias. </div>
+                              <div class="card-body text-dark">
+                              <div class="row">
+                                <div class="form-group col-2">
+                                  <label for="id_desinsectacion">Desinsectación.</label>
+                                      {{ form.desinsectacion }}    
+                                </div>
+                                <div class="form-group col-1">
+                                  <label for="id_desinfeccion">Desinfección.</label>
+                                      {{ form.desinfeccion }}    
+                                </div>
+                                <div class="form-group col-2">
+                                  <label for="id_desratizacion">Desratización.</label>
+                                      {{ form.desratizacion }}    
+                                </div>
+                                <div class="form-group col-1">
+                                  <label for="id_cuarentena">Cuarentena.</label>
+                                      {{ form.cuarentena }}    
+                                </div>
+                                <div class="form-group col-2">
+                                  <label for="id_aislamientocasos">Aislamiento de casos.</label>
+                                      {{ form.aislamientocasos }}    
+                                </div>
+                                <div class="form-group col-2">
+                                  <label for="id_aislamientoembarcacion">Aislamiento embarcación.</label>
+                                      {{ form.aislamientoembarcacion }}    
+                                </div>
+                                <div class="form-group col-1">
+                                  <label for="id_otramedsan">Otra.</label>
+                                      {{ form.otramedsan }}    
+                                </div>
+                                <div class="form-group col-1">
+                                  <label for="id_ningunamedsan">Ninguna.</label>
+                                      {{ form.ningunamedsan }}    
+                                </div>                                
+                              </div>                             
+                            </div>
+                          </div>
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                              <div class="card-header" style="font-weight: bold;">8. Requerimientos que deben ponerse en practica en la embarcación. </div>
+                              <div class="card-body text-dark">
+                              <div class="row">
+                                <div class="form-group col-4">
+                                  <label for="id_mallasprotectoras">Mallas protectoras.</label>
+                                      {{ form.mallasprotectoras }}    
+                                </div>
+                                <div class="form-group col-4">
+                                  <label for="id_discoatajaratas">Disco ataja ratas en los cabos de amarre.</label>
+                                      {{ form.discoatajaratas }}    
+                                </div>
+                                <div class="form-group col-4">
+                                  <label for="id_tapetesanitario">Tapete sanitario.</label>
+                                      {{ form.tapetesanitario }}    
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                              <div class="card-header" style="font-weight: bold;">9. Carga para el puerto. </div>
+                              <div class="card-body text-dark">
+                              <div class="row">
+                                <div class="form-group col-3">
+                                  <label for="id_cargaparapuerto">Toneladas de carga para el puerto.</label>
+                                      {{ form.cargaparapuerto }}    
+                                </div>
+                                <div class="form-group col-3">
+                                  <label for="id_tonelajecargapeligrosa">Tonelaje carga peligrosa.</label>
+                                      {{ form.tonelajecargapeligrosa }}    
+                                </div>
+                              </div>
+                              <div class="row">
+                  <!-- inline form for NovlcReg Tipo 3 start -->
+
+                  <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.actaembarcacioninterimo as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="actaembarcacioninterimo-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="actaembarcacioninterimo-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                          <div class="card-header card-header-secondary">
+                              <h4 class="card-title">IMO:</h4>
+                          </div>
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>IMO<span style="color: red;" class="required">*</span></th>          
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-actaembarcacioninterimo">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="actaembarcacioninterimo-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#actaembarcacioninterimo{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="actaembarcacioninterimo{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="actaembarcacioninterimoLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="actaembarcacioninterimoLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar el IMO?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actaembinterimo' formss.instance.pk %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-actaembarcacioninterimo-button" class="btn btn-secondary add-actaembarcacioninterimo">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+
+                      {% endwith %}
+                                
+                              </div>
+                            </div>
+                          </div>
+
+                           <div class="card border-dark mb-12" style="margin-top: 5px;">
+                              <div class="card-header" style="font-weight: bold;">10. Observaciones. </div>
+                              <div class="card-body text-dark">
+                              <div class="row">
+                                 <div class="form-group col-12">  
+                                      {{ form.observaciones }}    
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+
+                         
+
+                  <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.actaembarcacioninterfuncionarios as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="actaembarcacioninterfuncionarios-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="actaembarcacioninterfuncionarios-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                          <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Funcionarios</h4>
+                          </div>
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Funcionario <span style="color: red;" class="required">*</span></th>                                  
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-actaembarcacioninterfuncionarios">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="actaembarcacioninterfuncionarios-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#actaembarcacioninterfuncionarios{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="actaembarcacioninterfuncionarios{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="actaembarcacioninterfuncionariosLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="actaembarcacioninterfuncionariosLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar el funcionario?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actaembinterfunc' formss.instance.pk %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-actaembarcacioninterfuncionarios-button" class="btn btn-secondary add-actaembarcacioninterfuncionarios">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+                      {% endwith %}
+                      <!-- inline form for Images end -->
+                  
+                  <div class="card border-dark mb-12" style="margin-top: 5px;">
+                      <div class="card-header" style="font-weight: bold;">Libre platica. </div>
+                        <div class="card-body text-dark">
+                          <div class="row">
+                             <div class="form-group col-3">  
+                                <label for="id_fechalibreplatica">Se concede la libre platica a las.</label>
+                                {{ form.fechalibreplatica }}    
+                                </div>   
+                             </div>
+                           </div>
+                       </div>
+                   
+
+
+                   </div>       
+
+                   
+                  
+
+                {% for field in form %}
+                <p>                    
+                {% for error in field.errors %}
+                    {{ error }} - {{ field.label_tag }}
+                {% endfor %}
+                </p>
+                {% endfor %}
+                  
+                      
+
+
+
+                           <div class="dropdown-divider"></div>
+                             <div class="row">
+                               <div class="col">
+                                 <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span>Guardar</button>
+                              
+                                <a href="{% url 'sam:actaembint_list' idembarcacion %}" class="btn btn-success">Cancelar</a>
+                               </div>
+                             </div> 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  </form>
+{% endblock page_content %}
+
+{% block js_page %}
+   
+<script>
+
+ $(document).ready(function() {
+
+    // when user clicks add more btn of seguimiento
+      $('.add-actaembarcacioninterfuncionarios').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-actaembarcacioninterfuncionarios').children().length;
+          var tmplMarkup = $('#actaembarcacioninterfuncionarios-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-actaembarcacioninterfuncionarios').append(compiledTmpl);
+  
+          // update form count
+          $('#id_actaembarcacioninterfuncionarios-TOTAL_FORMS').attr('value', count+1);
+      });
+
+      $('.add-actaembarcacioninterimo').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-actaembarcacioninterimo').children().length;
+          var tmplMarkup = $('#actaembarcacioninterimo-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-actaembarcacioninterimo').append(compiledTmpl);
+  
+          // update form count
+          $('#id_actaembarcacioninterimo-TOTAL_FORMS').attr('value', count+1);
+      });
+
+      $('.add-actaembarcacioninterpuerto').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-actaembarcacioninterpuerto').children().length;
+          var tmplMarkup = $('#actaembarcacioninterpuerto-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-actaembarcacioninterpuerto').append(compiledTmpl);
+  
+          // update form count
+          $('#id_actaembarcacioninterpuerto-TOTAL_FORMS').attr('value', count+1);
+      });
+
+  
+  });
+</script>
+
+<script>
+
+$(function(){
+    $("#id_fechaexpcertsanidad, #id_fechavencecertsanidad").datetimepicker({
+        format:'d/m/Y',
+        timepicker:false
+    });
+
+    $("#id_fechalibreplatica, #id_fecha").datetimepicker({
+        format:'d/m/Y H:m:s',
+        timepicker:true
+    });
+
+
+    $('#id_municipio, #id_procedencia, #id_paisexpcertificado').select2({
+      placeholder: "Seleccione  información",
+      allowClear: true
+    });
+
+    $('.id_pto').select2({
+      placeholder: "Seleccione  el puerto",
+      allowClear: true
+    });
+
+
+    
+    
+ });
+</script>
+{% endblock js_page %}
+

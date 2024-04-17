@@ -1,0 +1,122 @@
+{% extends 'base/basesam.html' %}
+{% load static %}
+{% block page_content %}
+	  <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  {% if id == 0 %}
+                    <h6 class="m-0 font-weight-bold text-primary">Establecimiento</h6>
+                  {% elif id == 1 %}
+                    <h6 class="m-0 font-weight-bold text-primary">Buscar establecimiento educativo</h6>
+                  {% elif id == 2 %}
+                    <h6 class="m-0 font-weight-bold text-primary">Buscar establecimiento</h6>
+                  {% elif id == 3 %}
+                    <h6 class="m-0 font-weight-bold text-primary">Buscar establecimientos bodegas y patios</h6>
+                  {% elif id == 3 %}
+                    <h6 class="m-0 font-weight-bold text-primary">Buscar establecimientos bodegas y patios</h6>
+                    {% elif id == 4 %}
+                    <h6 class="m-0 font-weight-bold text-primary">Buscar establecimientos viviendas transitorias</h6>
+                    {% elif id == 5 %}
+                    <h6 class="m-0 font-weight-bold text-primary">Buscar establecimientos Hogares de paso</h6>
+                    {% elif id == 6 %}
+                    <h6 class="m-0 font-weight-bold text-primary">Buscar establecimientos Hogares comunitarios</h6>
+                    {% elif id == 7 %}
+                    <h6 class="m-0 font-weight-bold text-primary">Buscar establecimientos Hogares geriátrico</h6>
+                    {% elif id == 8 %}
+                    <h6 class="m-0 font-weight-bold text-primary">Buscar establecimientos Centros vida</h6>
+                    {% elif id == 9 %}
+                    <h6 class="m-0 font-weight-bold text-primary">Buscar centros carcelarios</h6>
+                    {% elif id == 10%}
+                    <h6 class="m-0 font-weight-bold text-primary">Buscar droguerías y farmacias</h6>
+                  {% endif %}
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                    {% if id == 0 %}   
+
+                      <div class="dropdown-header">Acciones:</div>
+                      <a class="dropdown-item"  href="{% url 'sam:propietario_new' %}"> <span class="fa fa-calendar-plus"></span>Nuevo</a>                      
+                    {% endif %}  
+                    </div>
+                  </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  {% if not obj  %}
+                        No hay registro de Establecimientos
+                  {% endif %}
+
+                <div class="buttons-toolbar"> 
+                 {% if id == 0 %}   
+                   <a class="dropdown-item" onclick="return abrir_modal('{% url 'sam:establecimiento_new' %}')"  href="#"> <span class="fa fa-calendar-plus"></span>Nuevo</a> 
+                  {% endif %}
+                </div>
+
+                  <table data-toggle="table"
+                    data-pagination="true"
+                    data-search="true"
+                    data-show-columns="true"
+                    data-toolbar=".buttons-toolbar"
+                    data-locale="es-MX"
+                    data-show-toggle="true"
+                    data-show-fullscreen="true">
+                    <thead>                      
+                      <th>Nitcc</th>
+                      <th>Razón social</th> 
+                      <th>nroinscripcion</th>                                            
+                      <th>nromatricula</th>    
+                      <th>Dirección</th>                      
+                      <th>Teléfonos</th>                      
+                      <th>correoelectronico</th>      
+                      <th>Propietario</th>  
+                      <th>Estado</th>
+                      <th class="all">Acciones</th> 
+                    </thead>  
+                    <tbody>
+                      {% for item in obj %}
+                        <tr>                            
+                            <td>{{item.nitcc}}</td>
+                            <td>{{item}}</td>
+                            <td>{{item.nroinscripcion}}</td>                            
+                            <td>{{item.nromatricula}}</td>                                 
+                            <td>{{item.direccion}}</td>                                 
+                            <td>{{item.telefonos}}</td>   
+                            <td>{{item.correoelectronico}}</td>                                 
+                            <td>{{item.propietario}}</td>  
+                            <td> {{item.estado }} </td>
+                            <td>
+                              {% if id == 0 %}
+                              <a href="{% url 'sam:establecimiento_edit' item.pk %}" class="btn btn-warning btn-circle"><i class="fas fa-cart-plus"></i></a>
+                              {% elif id == 1 %}
+                              <a href="{% url 'sam:actaestedu_list' item.pk %}" class="btn btn-warning btn-circle"><i class="fas fa-receipt"></i></a>
+                              
+                              {% elif id == 2 %}
+                              <a href="{% url 'sam:actagral_list' item.pk %}" class="btn btn-warning btn-circle"><i class="fas fa-receipt"></i></a>
+
+                              {% elif id == 3 %}
+                              <a href="{% url 'sam:actabodpat_list' item.pk %}" class="btn btn-warning btn-circle"><i class="fas fa-receipt"></i></a>
+                              {% elif id >= 4 and id < 9 %}
+                              <a href="{% url 'sam:actavivtrans_list' item.pk id %}" class="btn btn-warning btn-circle"><i class="fas fa-receipt"></i></a>
+                              {% elif id == 9 %}
+                              <a href="{% url 'sam:actaestcarcelario_list' item.pk %}" class="btn btn-warning btn-circle"><i class="fas fa-receipt"></i></a>
+                              {% elif id == 10 %}
+                              <a href="{% url 'sam:actadrogueria_list' item.pk %}" class="btn btn-warning btn-circle"><i class="fas fa-receipt"></i></a>
+
+                              {% endif %}
+
+                            </td>
+                          </tr>                   
+                      {% endfor %}
+                    </tbody>
+
+                  </table>
+                </div>
+            </div>
+{% endblock page_content %}
+
+{% block js_page %}
+ 
+
+ {% endblock %}

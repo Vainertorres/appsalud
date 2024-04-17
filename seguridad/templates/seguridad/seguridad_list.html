@@ -1,0 +1,69 @@
+{% extends 'base/baseseguridad.html' %}
+{% block page_content %}
+	  <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Listado de Eventos de seguridad</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Acciones:</div>
+                  
+                     <a class="dropdown-item" href="{% url 'seguridad:seguridad_new' %}"> <span class="fa fa-calendar-plus"></span>Nuevo</a>
+                    
+                      
+                    </div>
+                  </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  {% if not obj  %}
+                        No hay Eventos de seguridad
+                  {% endif %}
+                  <div class="buttons-toolbar">    
+                   <a class="dropdown-item" href="{% url 'seguridad:seguridad_new' %}"> <span class="fa fa-calendar-plus"></span>Nuevo</a>                    
+                  </div>
+                  <table                     
+                    data-toggle="table"
+                    data-pagination="true"              
+                    data-search="true"
+                    data-show-columns="true"
+                    data-toolbar=".buttons-toolbar"
+                    data-locale="es-MX"
+                    data-show-toggle="true"
+                    data-show-fullscreen="true"
+                    data-deferRender="true"                    
+                    >
+                    <thead>   
+                      <th>Fecha</th>
+                      <th>descripcion</th>
+                      <th>Evento de seguridad</th>                       
+                      <th>Barrio</th> 
+                      <th>dirección</th> 
+                      <th class="all">Acciones</th> 
+                    </thead>  
+                    <tbody>
+                      {% for item in obj %}
+                        <tr>
+                            <td>{{item.fecha}}</td>
+                            <td>{{item.descripcion }}</td>
+                            <td>{{item.acciones }}</td>                            
+                            <td>{{item.barrio }} </td>
+                            <td>{{item.direccion}}</td>                            
+                            <td>
+                              <a class="btn btn-warning btn-circle" href="{% url 'seguridad:seguridad_edit' item.pk %}" ><i class="far fa-edit"></i></a>
+                            </td>
+                          </tr>                   
+                      {% endfor %}
+                    </tbody>
+
+                  </table>
+                </div>
+            </div>
+{% endblock page_content %}
+
+{% block js_page %}
+
+{% endblock %}

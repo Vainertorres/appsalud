@@ -1,0 +1,116 @@
+{% extends 'base/basedengue.html' %}
+
+{% block page_content %}
+
+
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    {% if obj %}
+    <form  method='POST' role='form' action = "{% url 'ruaf:nacido_vivo_edit' idnv obj.pk %}"> 
+    {% else %}  
+    <form  method='POST' role='form' action = "{% url 'ruaf:nacido_vivo_new' idnv %}">
+    {% endif %}
+        {% csrf_token %}
+              <div class="col-xl-12 col-md-12 mb-12">
+                {% if obj %}
+                  <div class="card border-left-warning shadow h-100 py-2">
+                {% else %}    
+                  <div class="card border-left-success shadow h-100 py-2">
+                 {%  endif %}   
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                              {% if obj %} Editar {% else %} Nuevo {% endif %} Seguimientos nacidos vivos con bajo peso al nacer.
+                           </div>                      
+                           <div class="dropdown-divider"></div> 
+            
+                            <div class="row">
+                               <div class="form-group col-12">
+                                  <input type="hidden" name="nacido_vivo" value="{{idnv}}">
+                                  <label for="">{{madre}}</label>
+                               </div>
+                            </div>
+                            <div class="row">
+                                  <div class="form-group col-3">
+                                        <label for="id_fecha">Fecha</label>
+                                       {{form.fecha}}                               
+                                  </div>  
+                                  <div class="form-group col-3">
+                                        <label for="id_fecha">Recibe educación</label>
+                                       {{form.educacion}}                               
+                                  </div>  
+                                  <div class="form-group col-3">
+                                        <label for="id_fecha">Intervención de ICBF?</label>
+                                       {{form.icbf}}                               
+                                  </div>  
+                                  <div class="form-group col-3">
+                                        <label for="id_fecha">Intervención nutricionista?</label>
+                                       {{form.nutricionista}} 
+                                  </div>  
+                            </div>
+
+                            <div class="row">
+                                  <div class="form-group col-3">
+                                        <label for="id_peso">Peso</label>
+                                       {{form.peso}}                               
+                                  </div>  
+                                  <div class="form-group col-3">
+                                        <label for="id_talla">Talla</label>
+                                       {{form.talla}}                               
+                                  </div>  
+                                  
+                                  <div class="form-group col-3">
+                                        <label for="id_perimetro_cefalico">Perimetro cefálico</label>
+                                       {{form.perimetro_cefalico}}                               
+                                  </div>  
+                                  <div class="form-group col-3">
+                                        <label for="id_perimetro_toraxico">Perímetro torácico</label>
+                                       {{form.perimetro_toraxico}} 
+                                  </div>  
+                            </div>
+
+                            <div class="row">                                  
+                                <div class="form-group col-12">
+                                        <label for="id_hallazgos">Hallazgos</label>
+                                        <br>
+                                        {{form.hallazgos}}                               
+                                </div>       
+                            </div>
+      
+                           <div class="dropdown-divider"></div>
+                             <div class="row">
+                               <div class="col">
+                                 <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span>Guardar</button>
+                                <a class="btn btn-success" href="{% url 'ruaf:seg_nv' idnv %}">Cancelar</a>
+                               
+                               </div>
+                             </div> 
+                           </div>                
+                      </div>
+                    </div>
+                </div>
+              </div>
+    </form>
+  </div>
+</div>
+
+	
+{% endblock page_content %}
+{% block js_page %}
+
+<script>
+$(function(){
+
+  $("#id_fecha").datetimepicker({
+    format:'d/m/Y',
+    timepicker:false
+  });
+
+});
+
+  
+  </script>
+  
+{% endblock js_page %}
+

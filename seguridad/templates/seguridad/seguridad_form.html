@@ -1,0 +1,339 @@
+{% extends 'base/baseseguridad.html' %}
+
+{% block page_content %}
+
+    {% if obj %}
+    <form  method='POST' role='form' action = "{% url 'seguridad:seguridad_edit' obj.pk %}"> 
+    {% else %}  
+    <form  method='POST' role='form' action = "{% url 'seguridad:seguridad_new' %}">
+    {% endif %}
+        {% csrf_token %}
+              <div class="col-xl-12 col-md-12 mb-12">
+                {% if obj %}
+                  <div class="card border-left-warning shadow h-100 py-2">
+                {% else %}    
+                  <div class="card border-left-success shadow h-100 py-2">
+                 {%  endif %}   
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                              {% if obj %} Editar {% else %} Nuevo {% endif %} Evento de seguridad
+                           </div>                      
+                           <div class="dropdown-divider"></div> 
+                           <div class="row">
+                                  <div class="form-group col-2">
+                                        <label for="id_fecha">Fecha</label> 
+                                        {{form.fecha}}                               
+                                  </div> 
+                                   <div class="form-group col-4">
+                                        <label for="id_acciones">Tipo de caso</label> 
+                                        {{form.acciones}}                               
+                                  </div> 
+                                  <div class="form-group col-3">
+                                    <label for="id_departamento">Departamento</label>
+                                      {{ form.departamento }}                                    
+                                  </div>
+                                  <div class="form-group col-3">
+                                    <label for="id_municipio">Municipio</label>
+                                      <br>
+                                      {{ form.municipio }}                                    
+                                  </div>
+                           </div>
+                            <div class="row">
+                                  <div class="form-group col-3">
+                                    <label for="id_barrio">Barrio</label>
+                                      <br>
+                                      {{ form.barrio }}                                    
+                                  </div>
+                                  <div class="form-group col-5">
+                                  <label for="id_direccion">Dirección</label>
+                                    {{form.direccion}}                               
+                              </div> 
+                              <div class="form-group col-2">
+                                  <label for="id_lat">Latitud</label>
+                                  {{form.lat}}                               
+                              </div> 
+                              <div class="form-group col-2">
+                                  <label for="id_lon">Longitud</label>
+                                  {{form.lon}}                               
+                              </div> 
+                            </div>
+
+                            <div class="row">                              
+                              <div class="col-12">
+                                  <label for="id_descripcion">Descripcion</label>
+                                  {{form.descripcion}}                               
+                              </div> 
+                            </div>
+                 
+                 <!-- inline form for Seguimiento start -->
+
+                  {% with named_formsets.afectados as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="afectados-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="afectados-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+
+                      <div class="table-responsive card mt-4">
+                          <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Agregrar usuarios afectados</h4>
+                          </div>
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Paciente <span style="color: red;" class="required">*</span></th>
+                                  <th>Estado <span style="color: red;" class="required">*</span></th>                                  
+                                  <th>Delete?</th>
+                                  <th>Custom Delete btn</th>
+                              </thead>
+                              <tbody id="item-afectados">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="afectados-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="exampleModal{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="exampleModalLabel{{formss.instance.pk}}">Are Your Sure You Want To Delete This?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'seguridad:delete_afectado' formss.instance.pk %}" type="button" class="btn btn-primary">Yes, Delete</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-afectados-button" class="btn btn-secondary add-afectados">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+
+                      
+                      
+                      {% endwith %}
+                      <!-- inline form for Images end -->
+
+
+                      <!-- inline form for Organismos_atiende start -->
+
+                  {% with named_formsets.organismos_atiende as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="organismos_atiende-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="organismos_atiende-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                          <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Agregrar organismos atiende</h4>
+                          </div>
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Organismo <span style="color: red;" class="required">*</span></th>
+                                  <th>Descripción <span style="color: red;" class="required">*</span></th>                                  
+                                  <th>Delete?</th>
+                                  <th>Custom Delete btn</th>
+                              </thead>
+                              <tbody id="item-organismos_atiende">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="organismos_atiende-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="exampleModal{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="exampleModalLabel{{formss.instance.pk}}">Are Your Sure You Want To Delete This?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'seguridad:delete_organismos' formss.instance.pk %}" type="button" class="btn btn-primary">Yes, Delete</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-organismos_atiende-button" class="btn btn-secondary add-organismos_atiende">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+
+                      
+                      
+                      {% endwith %}
+                      <!-- inline form for Images end -->
+
+
+                    
+                           <div class="dropdown-divider"></div>
+                             <div class="row">
+                               <div class="col">
+                                 <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span>Guardar</button>
+                              
+                                <a href="{% url 'seguridad:seg_list' %}" class="btn btn-success">Cancelar</a>
+                               </div>
+                             </div> 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+  </form>
+{% endblock page_content %}
+
+{% block js_page %}
+    <script>
+    $(document).ready(function () {
+      $('.paciente').select2({
+            ajax: {
+                url: '{% url 'cvd:busqpac' %}',
+                dataType: 'json',
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {id: item.id, text: item.identificacion +':'+ item.razonsocial};
+                        })
+                    };
+                }
+            },
+            minimumInputLength: 1
+        });
+    });
+</script>
+
+<script>
+
+  
+ $(document).ready(function() {
+    // when user clicks add more btn of seguimiento
+      $('.add-afectados').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-afectados').children().length;
+          var tmplMarkup = $('#afectados-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-afectados').append(compiledTmpl);
+  
+          // update form count
+          $('#id_afectados-TOTAL_FORMS').attr('value', count+1);
+
+          $('.paciente').select2({
+            ajax: {
+                url: '{% url 'cvd:busqpac' %}',
+                dataType: 'json',
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {id: item.id, text: item.identificacion +':'+ item.razonsocial};
+                        })
+                    };
+                }
+            },
+            minimumInputLength: 1
+        });
+      });
+
+
+    // when user clicks add more btn of seguimiento
+      $('.add-organismos_atiende').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-organismos_atiende').children().length;
+          var tmplMarkup = $('#organismos_atiende-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-organismos_atiende').append(compiledTmpl);
+  
+          // update form count
+          $('#id_organismos_atiende-TOTAL_FORMS').attr('value', count+1);
+      });
+
+
+  
+  });
+</script>
+
+<script>
+
+$(function(){
+
+    
+      $("#id_fecha").datetimepicker({
+        format:'d/m/Y',
+        timepicker:false
+      });
+    
+ });
+</script>
+{% endblock js_page %}
+

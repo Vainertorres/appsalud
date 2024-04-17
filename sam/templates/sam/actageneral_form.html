@@ -1,0 +1,325 @@
+{% extends 'base/basesam.html' %}
+
+{% block page_content %}
+
+    {% if obj %}
+    <form  method='POST' role='form' action = "{% url 'sam:actagral_edit' idestablecimiento obj.pk %}"> 
+    {% else %}  
+    <form  method='POST' role='form' action = "{% url 'sam:actagral_create' idestablecimiento %}">
+    {% endif %}
+        {% csrf_token %}
+              <div class="col-xl-12 col-md-12 mb-12">
+                {% if obj %}
+                  <div class="card border-left-warning shadow h-100 py-2">
+                {% else %}    
+                  <div class="card border-left-success shadow h-100 py-2">
+                 {%  endif %}   
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                               {% if obj %} Editar {% else %} Nuevo {% endif %} Acta de establecimiento: {{nomestablecimiento}}
+                           </div>                      
+                           <div class="dropdown-divider"></div> 
+
+                             <input type="hidden" id="id_establecimiento" name="establecimiento" value="{{ idestablecimiento }}">
+                           
+                           <div class="col-12">
+                             <div class="row">
+                                 <div class="form-group col-2">
+                                    <label for="id_fecha">Fecha</label>   
+                                      {{ form.fecha }}                                    
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_nroacta">Acta Nro.</label>   
+                                      {{ form.nroacta }}                                    
+                                 </div>
+                                 <div class="form-group col-4">
+                                    <label for="id_actividad">Actividad</label>   
+                                      {{ form.actividad }}                                    
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_municipio">Ciudad</label>   
+                                      {{ form.municipio }}                                    
+                                 </div>
+                             </div>
+                             <div class="row">
+                                <div class="form-group col-9">
+                                    <label for="id_establecimiento" style="font-weight: bold; font-size: 30px; ">Establecimiento</label>  
+                                    <br>
+                                     <p style="color:blue; font-size: 30px; font-weight: bold;">{{ nomestablecimiento }}</p>                               
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_tiposujeto">Tipo de sujeto</label>   
+                                      {{ form.tiposujeto }}                                    
+                                 </div>
+                               
+                             </div>
+                             <div class="row">
+                                <div class="form-group col-6">
+                                    <label for="id_observacion">Observación</label>  
+                                    <br>
+                                     <p>{{ form.observacion }}</p>                               
+                                 </div>
+                                 <div class="form-group col-6">
+                                    <label for="id_requerimiento">Requerimientos</label>   
+                                      {{ form.requerimiento }}                                    
+                                 </div>
+                               
+                             </div>
+                            </div>
+                  <!-- inline form for NovlcReg Tipo 2 start -->
+
+                  <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.actageneralfuncionarios as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="actageneralfuncionarios-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="actageneralfuncionarios-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                          <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Funcionarios</h4>
+                          </div>
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Funcionario <span style="color: red;" class="required">*</span></th>                                  
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-actageneralfuncionarios">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="actageneralfuncionarios-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#actageneralfuncionarios{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="actageneralfuncionarios{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="actageneralfuncionariosLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="actageneralfuncionariosLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar el funcionario?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actageneralfuncionarios' formss.instance.pk %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-actageneralfuncionarios-button" class="btn btn-secondary add-actageneralfuncionarios">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+                      {% endwith %}
+                      <!-- inline form for Images end -->
+
+
+
+                  <!-- inline form for NovlcReg Tipo 3 start -->
+
+                  <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.atiendeactageneral as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="atiendeactageneral-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="atiendeactageneral-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                          <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Visita atendida por:</h4>
+                          </div>
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Tipo Documento<span style="color: red;" class="required">*</span></th>                                  
+                                  <th>Identificación <span style="color: red;" class="required">*</span></th>                                  
+                                  <th>Nombre y apellidos<span style="color: red;" class="required">*</span></th>      
+                                  <th>Cargo</th>
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-atiendeactageneral">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="atiendeactageneral-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#atiendeactageneral{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="atiendeactageneral{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="atiendeactageneralLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="atiendeactageneralLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar usuario que atendió visita?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_atiendeactageneral' formss.instance.pk %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-atiendeactageneral-button" class="btn btn-secondary add-atiendeactageneral">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+
+                      {% endwith %}
+                      <div class="col-12">
+                             <div class="row">
+                                 <div class="form-group col-3">
+                                    <label for="id_concepto">Concepto</label>   
+                                      {{ form.concepto }}                                    
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_plazo">Plazo</label>   
+                                      {{ form.plazo }}                                    
+                                 </div>
+                              </div>
+                      </div>
+                  
+
+
+
+                           <div class="dropdown-divider"></div>
+                             <div class="row">
+                               <div class="col">
+                                 <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span>Guardar</button>
+                              
+                                <a href="{% url 'sam:actagral_list' idestablecimiento %}" class="btn btn-success">Cancelar</a>
+                               </div>
+                             </div> 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  </form>
+{% endblock page_content %}
+
+{% block js_page %}
+   
+<script>
+
+ $(document).ready(function() {
+
+    // when user clicks add more btn of seguimiento
+      $('.add-actageneralfuncionarios').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-actageneralfuncionarios').children().length;
+          var tmplMarkup = $('#actageneralfuncionarios-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-actageneralfuncionarios').append(compiledTmpl);
+  
+          // update form count
+          $('#id_actageneralfuncionarios-TOTAL_FORMS').attr('value', count+1);
+      });
+
+      $('.add-atiendeactageneral').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-atiendeactageneral').children().length;
+          var tmplMarkup = $('#atiendeactageneral-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-atiendeactageneral').append(compiledTmpl);
+  
+          // update form count
+          $('#id_atiendeactageneral-TOTAL_FORMS').attr('value', count+1);
+      });
+
+  
+  });
+</script>
+
+<script>
+
+$(function(){
+    $("#id_fecha").datetimepicker({
+        format:'d/m/Y',
+        timepicker:false
+    });
+
+    $('#id_actividad').select2({
+      placeholder: "Seleccione  la actividad",
+      allowClear: true
+    });
+
+    $('#id_municipio').select2({
+      placeholder: "Seleccione  la ciudad",
+      allowClear: true
+    });
+    
+ });
+</script>
+{% endblock js_page %}
+

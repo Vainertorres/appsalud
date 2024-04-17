@@ -1,0 +1,172 @@
+{% extends 'base/baseruaf.html' %}
+{% block page_content %}
+
+	<div class="col-xl-12 col-md-12 mb-12">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                              Seguimiento caso de niño con bajo peso al nacer.
+                        </div>                      
+                        <div class="dropdown-divider"></div> 
+                        <div class="row"> 
+                                <div class="form-group col-2">
+                                    Certificado Nro: <p>{{nv.nrocertificado}}</p>                        
+                                </div>   
+
+                               	<div class="form-group col-1">
+                                    Fecha Nac: <p>{{nv.fechanac|date:"d/m/Y"}}</p>
+                                </div>
+                                
+                                <div class="form-group col-3">
+                                   Departamento: <p>{{nv.departamento}} </p>
+                                </div>  
+
+                                <div class="form-group col-3">
+                                   Municipio: <p>{{nv.municipio}} </p>
+                                </div>  
+
+                                <div class="form-group col-1">
+                                   Sexo: <p>{{nv.sexo}} </p>
+                                </div>  
+
+                                <div class="form-group col-1">
+                                   Peso: <p>{{nv.peso}} </p>
+                                </div>  
+
+                                <div class="form-group col-1">
+                                   Talla: <p>{{nv.talla}} </p>
+                                </div>  
+                       
+                        </div>    
+                        <div class="row"> 
+                                <div class="form-group col-2">
+                                    Tipo parto:<p>{{nv.tipo_parto}} </p>
+                                </div>        
+
+                                <div class="form-group col-4">
+                                    Ips:<p>{{nv.ips}} </p>                       
+                                </div>    
+
+                               	<div class="form-group col-4" id='pac'>
+                                  <b>  Datos de la madres: </b> <p>{{nv.madre}}</p>
+                                </div>
+
+                                <div class="form-group col-2">
+                                    Eps:<p>{{nv.madre__eps__descripcion}} </p>
+                                </div>    
+                                 
+                        </div> 
+                </div>
+             </div>  <!-- Cardbody -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="dropdown-divider"></div>
+    </div>
+
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">                        
+                       <!-- inicio detalle -->
+                       <div class="row">
+                               <div class="col-7" id="prueba">
+                                    <div class="row">
+                                        <p id="titulo">Actividades de Seguimientos</p> 
+                                    </div>
+                                    <div class="row">
+                                       <div class="buttons-toolbar">
+                                             <a class="dropdown-item" href="{% url 'ruaf:nacido_vivo_new' nv.pk %}"> <span class="fa fa-calendar-plus"></span>Nuevo seguimiento</a>
+                                       </div>
+
+
+                                       	<table data-toggle="table"
+                                            data-pagination="true"
+                                            data-search="true"
+                                            data-show-columns="true"
+                                            data-toolbar=".buttons-toolbar"
+                                            data-locale="es-MX"
+                                            data-show-toggle="true"
+                                            data-show-fullscreen="true">
+        									<thead>
+        										<th>fecha</th>
+        										<th>hallazgos</th>
+        										<th>Acción</th>
+        									</thead>
+        									<tbody>
+
+        										{% for item in seguimiento %}
+        											<tr>
+        											<td>{{item.fecha|date:"d/m/Y"}}</td>
+        											<td>{{item.hallazgos}}</td>
+        											<td>
+                                                        <a class="btn btn-warning btn-circle" href="{% url 'ruaf:nacido_vivo_edit' nv.pk item.pk %}"><i class="far fa-edit"></i></a>
+                                                    </td>
+        											</tr>
+        										{% endfor %}		
+        									</tbody>                               		
+                                       	</table> 
+                                    </div>                
+                               </div>
+                    
+                        <div class="col-1"></div>
+
+                        <div class="col-4" id="prueba"> {# Grilla file nacidos vivos #}
+                            <div class="row" id="titulo">
+                              <p id="titulo">Documentos Anexos</p> 
+                            </div>
+                           <div class="row">
+
+                            <div class="buttons-toolbar2">
+                            <a class="dropdown-item" href="{% url 'ruaf:file_nv_new' nv.pk %}"> <span class="fa fa-calendar-plus"></span>Nuevo</a>
+                           </div>                        
+
+                            <table data-toggle="table"
+                            data-pagination="true"
+                            data-search="true"
+                            data-show-columns="true"
+                            data-toolbar=".buttons-toolbar2"
+                            data-locale="es-MX"
+                            data-show-toggle="true"
+                            data-show-fullscreen="true">
+                            <thead>   
+                              <th>Descripción</th>                                     
+                              <th class="all">Acciones</th> 
+                            </thead>  
+                            <tbody>
+                              {% for item in filenv %}
+                                <tr>
+                                    <td><a href="/media/{{item.archivo}} ">{{item.descripcion}}</a></td>
+                                    <td>
+                                      <a href="{% url 'ruaf:file_nv_edit' nv.pk item.pk %}" class="btn btn-warning btn-circle"><i class="far fa-edit"></i></a>
+                                    </td>
+                                  </tr>                   
+                              {% endfor %}
+                            </tbody>
+
+                          </table>
+                        
+                             
+                         </div>
+                        </div>   <!-- Fin del table de documentos anexos -->
+
+                        <div class="dropdown-divider"></div>
+                             <div class="row">
+                               <div class="col">
+                                 
+                                <a class="btn btn-success" href="{% url 'ruaf:seg_bajo_peso' %}">Aceptar</a>
+                               
+                               </div>
+                             </div> 
+
+                    </div> <!-- Fin de las tablas Seguimiento y de documentos anexos -->
+                        
+                </div>
+             </div>  <!-- Cardbody -->
+        </div>
+    </div>
+</div>
+
+{% endblock page_content %}

@@ -1,0 +1,65 @@
+{% extends 'base/basedengue.html' %}
+
+{% block page_content %}
+
+
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    {% if obj %}
+    <form  method='POST' enctype="multipart/form-data" role='form' action = "{% url 'ruaf:file_nv_edit' idnv obj.pk %}"> 
+    {% else %}  
+    <form  method='POST' enctype="multipart/form-data" role='form' action = "{% url 'ruaf:file_nv_new' idnv %}">
+    {% endif %}
+        {% csrf_token %}
+              <div class="col-xl-12 col-md-12 mb-12">
+                {% if obj %}
+                  <div class="card border-left-warning shadow h-100 py-2">
+                {% else %}    
+                  <div class="card border-left-success shadow h-100 py-2">
+                 {%  endif %}   
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                              {% if obj %} Editar {% else %} Nuevo {% endif %} Archivos anexos, nacidos vivos con bajo peso al nacer.
+                           </div>                      
+                           <div class="dropdown-divider"></div> 
+            
+                            <div class="row">
+                               <div class="form-group col-12">
+                                  <input type="hidden" name="nacido_vivo" value="{{idnv}}">
+                                  <label for="">{{madre}}</label>
+                               </div>
+                            </div>
+                            <div class="row">
+                                  <div class="form-group col-12">
+                                        <label for="id_descripcion">descripción</label>
+                                       {{form.descripcion}}                               
+                                  </div>  
+                            </div>
+                            <div class="row">                                  
+                                  <div class="form-group col-12">
+                                        <label for="id_archivo">Seleccionar archivo</label>
+                                       {{form.archivo}}                               
+                                  </div>  
+                            </div>
+      
+                           <div class="dropdown-divider"></div>
+                             <div class="row">
+                               <div class="col">
+                                 <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span>Guardar</button>
+                                <a class="btn btn-success" href="{% url 'ruaf:seg_nv' idnv %}">Cancelar</a>
+                               
+                               </div>
+                             </div> 
+                           </div>                
+                      </div>
+                    </div>
+                </div>
+              </div>
+    </form>
+  </div>
+</div>
+
+	
+{% endblock page_content %}

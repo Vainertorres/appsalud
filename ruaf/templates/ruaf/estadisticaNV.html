@@ -1,0 +1,233 @@
+{% extends 'base/baseruaf.html' %}
+
+{% load static %}
+
+{% block head_list %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" /> 
+
+ <script src="{% static 'ruaf/js/estadistica.js' %}"></script>
+
+{% endblock head_list%} 
+
+{% block page_content %}
+
+
+<div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">{{titulo}}</h6>
+       </div>   
+                
+     <!-- Card Body -->
+    <div class="card-body"> 
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="form-group">
+           <label>Rango de fechas:</label>
+            {{ form.date_range }}
+          </div>
+         </div>                     
+      </div>             
+      <hr>  
+   </div>
+</div>      
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="containerips">
+                
+               
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="dropdown-divider"></div> 
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div id="containersitio">
+                
+               
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div id="containersexo">
+                
+               
+            </div>
+        </div>
+    </div>
+</div> 
+    
+{% endblock page_content %}
+
+{% block js_page %}
+
+
+
+<link rel="stylesheet" href="{% static '/lib/datatables-1.10.20/plugins/buttons-1.6.1/css/buttons.bootstrap.min.css' %}"/>
+    <script src="{% static '/lib/datatables-1.10.20/plugins/buttons-1.6.1/js/dataTables.buttons.min.js' %}" type="text/javascript"></script>
+    <script src="{% static '/lib/datatables-1.10.20/plugins/jszip-2.5.0/jszip.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'lib/datatables-1.10.20/plugins/pdfmake-0.1.36/pdfmake.min.js' %}" type="text/javascript"></script>
+    <script src="{% static '/lib/datatables-1.10.20/plugins/pdfmake-0.1.36/vfs_fonts.js' %}" type="text/javascript"></script>
+    <script src="{% static '/lib/datatables-1.10.20/plugins/buttons-1.6.1/js/buttons.html5.min.js' %}" type="text/javascript"></script>
+
+
+
+<script type="text/javascript">
+
+// script Estadistica por ips
+
+// Create the chart
+Highcharts.chart('containerips', {
+   // var fecha_ini = "Nacidos vivos, entre el " + {{ fec_ini}
+    chart: {
+        type: 'column'
+    },
+    title: {
+        align: 'left',
+        text: 'Nacidos Vivos por Ips de Atención del Parto'
+    },
+    subtitle: {{ subtitle|safe }},
+    /*{
+        align: 'left',
+        text: {{ fec_ini }}
+    },*/
+    accessibility: {
+        announceNewData: {
+            enabled: true
+        }
+    },
+    xAxis: {
+        type: 'category'
+    },
+    yAxis: {
+        title: {
+            text: 'Número de usurios'
+        }
+
+    },
+    legend: {
+        enabled: false
+    },
+    plotOptions: {
+        series: {
+            borderWidth: 0,
+            dataLabels: {
+                enabled: true,
+                format: '{point.y:.0f}'
+            }
+        }
+    },
+
+    tooltip: {
+        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+        pointFormat: '<span style="color:{point.color}">{point.nombredx}</span>: <b>{point.y:.0f}</b> Niño(s)<br/>'
+    },
+
+    series: [
+        {
+            name: 'Nacivos vivos',
+            colorByPoint: true,
+            data: {{ ips|safe }}      
+        }
+    ],
+    
+});
+</script>
+
+
+<script type="text/javascript">
+
+// script Estadistica por sitio de nacimiento
+
+// Create the chart
+Highcharts.chart('containersitio', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'Estadística de nacidos vivos por sitio de nacimiento'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        }
+    },
+    series: [{
+        name: 'Porcentaje',
+        colorByPoint: true,
+        data: {{ sitio|safe }} 
+
+    }]
+});
+
+</script>
+
+
+<script type="text/javascript">
+
+// script Estadistica por sexo
+
+// Create the chart
+Highcharts.chart('containersexo', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'Estadística de nacidos vivos por sexo'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        }
+    },
+    series: [{
+        name: 'Porcentaje:',
+        colorByPoint: true,
+        data: {{ sexo|safe }} 
+
+    }]
+});
+
+</script>
+
+
+
+{% endblock js_page %}

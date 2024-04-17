@@ -1,0 +1,702 @@
+{% extends 'base/basesam.html' %}
+
+{% block page_content %}
+
+    {% if obj %}
+    <form  method='POST' role='form' action = "{% url 'sam:actabodpat_edit' idestablecimiento obj.pk %}"> 
+    {% else %}  
+    <form  method='POST' role='form' action = "{% url 'sam:actabodpat_create' idestablecimiento %}">
+    {% endif %}
+        {% csrf_token %}
+              <div class="col-xl-12 col-md-12 mb-12">
+                {% if obj %}
+                  <div class="card border-left-warning shadow h-100 py-2">
+                {% else %}    
+                  <div class="card border-left-success shadow h-100 py-2">
+                 {%  endif %}   
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                               {% if obj %} Editar {% else %} Nuevo {% endif %} Acta de bodegas y patios: {{nomestablecimiento}}
+                           </div>                      
+                           <div class="dropdown-divider"></div> 
+
+                             <input type="hidden" id="id_establecimiento" name="establecimiento" value="{{ idestablecimiento }}">
+                           
+                           <div class="col-12">
+                            <div class="card border-dark mb-12" >
+                              <div class="card-header" style="font-weight: bold; ">1. Datos del establecimiento.</div>
+                              <div class="card-body text-dark">
+                             <div class="row">
+                                 <div class="form-group col-2">
+                                    <label for="id_fecha">Fecha</label>   
+                                      {{ form.fecha }}                                    
+                                 </div>
+                                 <div class="form-group col-2">
+                                    <label for="id_nroacta">Acta Nro.</label>   
+                                      {{ form.nroacta }}                                    
+                                 </div>
+                                 <div class="form-group col-2">
+                                    <label for="id_objetivovisita">Objeto de visita</label>
+                                      {{ form.objetivovisita }}                     
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_motivovisita">Motivo de visita</label>   
+                                      {{ form.motivovisita }}                     
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_municipio">Ciudad</label>   
+                                      {{ form.municipio }}
+                                 </div>
+                             </div>
+                             
+                             <div class="row">
+                                <div class="form-group col-9">
+                                    <label for="id_establecimiento" style="font-weight: bold; font-size: 25px; ">Establecimiento</label>  
+                                    <br>
+                                     <span style="color:blue; font-size: 30px; font-weight: bold;">{{ nomestablecimiento }}</span>                               
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_codigociuu">Código CIUU</label>   
+                                      {{ form.codigociuu }}                    
+                                 </div>
+                               
+                             </div>
+
+                             </div>
+                         </div>
+
+                         <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">2. Planta de personal.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+                                 <div class="form-group col-3">
+                                    <label for="id_personaladmhombre">Personal administrativo hombre</label>   
+                                      {{ form.personaladmhombre }}                    
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_personaladmmujeres">Personal administrativo mujer</label>   
+                                      {{ form.personaladmmujeres }}                    
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_personalopehombre">Personal Operativo hombre</label>   
+                                      {{ form.personalopehombre }}                    
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_personalopemujeres">Personal operativo mujer</label>   
+                                      {{ form.personalopemujeres }}                    
+                                 </div>                               
+                              </div>
+                              <div class="row">
+                                <div class="form-group col-3">
+                                    <label for="id_diasemanalab">Días a la semana laborados</label>   
+                                      {{ form.diasemanalab }}                    
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_nroturnos">Nro de turnos</label>   
+                                      {{ form.nroturnos }}                    
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_horasxturno">Horas por turno</label>   
+                                      {{ form.horasxturno }}                    
+                                 </div>
+                                
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">3. Producto químico.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+
+                  <!-- inline form for NovlcReg Tipo 2 start -->
+                  <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.productoquimicoactabodegaspatios as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="productoquimicoactabodegaspatios-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="productoquimicoactabodegaspatios-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">      
+                          <!-- <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Productos químicos</h4>
+                          </div> -->                    
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Producto <span style="color: red;" class="required">*</span></th>
+                                  <th>Almacena <span style="color: red;" class="required">*</span></th>
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-productoquimicoactabodegaspatios">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="productoquimicoactabodegaspatios-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#productoquimicoactabodegaspatios{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="productoquimicoactabodegaspatios{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="productoquimicoactabodegaspatiosLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="productoquimicoactabodegaspatiosLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar el Producto?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actabypproducto' formss.instance.pk %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-productoquimicoactabodegaspatios-button" class="btn btn-secondary add-productoquimicoactabodegaspatios">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+                      {% endwith %}
+                      <!-- inline form for Images end -->
+
+                                
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">4.Evaluación.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+                  <!-- inline form for NovlcReg Tipo 3 start -->
+                  <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.itemactabodegaspatios as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="itemactabodegaspatios-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="itemactabodegaspatios-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                          <!-- <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Item a evaluar:</h4>
+                          </div> -->
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Item a evaluar<span style="color: red;" class="required">*</span></th>                                  
+                                  <th>Hallazgo <span style="color: red;" class="required">*</span></th>                                  
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-itemactabodegaspatios">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="itemactabodegaspatios-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#itemactabodegaspatios{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="itemactabodegaspatios{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="itemactabodegaspatiosLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="itemactabodegaspatiosLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar item a evaluar?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actabypevalua' formss.instance.pk %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-itemactabodegaspatios-button" class="btn btn-secondary add-itemactabodegaspatios">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+
+                      {% endwith %}
+                      
+
+
+                                
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">5.Medidas sanitarias.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+                  <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.medidasanitariaactabodegaspatios as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="medidasanitariaactabodegaspatios-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="medidasanitariaactabodegaspatios-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                          <!-- <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Medidas sanitarias</h4>
+                          </div> -->
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Medidas sanitarias <span style="color: red;" class="required">*</span></th>
+                                  <th>Hallazgo <span style="color: red;" class="required">*</span></th>
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-medidasanitariaactabodegaspatios">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="medidasanitariaactabodegaspatios-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#medidasanitariaactabodegaspatios{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="medidasanitariaactabodegaspatios{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="medidasanitariaactabodegaspatiosLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="medidasanitariaactabodegaspatiosLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar la medida sanitaria?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actabypmedsan' formss.instance.pk %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-medidasanitariaactabodegaspatios-button" class="btn btn-secondary add-medidasanitariaactabodegaspatios">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+                      {% endwith %}
+                      <!-- inline form for Images end -->
+
+                                
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">6.Requerimientos.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+                                <div class="form-group col-12">
+                                    <label for="id_requerimiento">Requerimientos</label>   
+                                      {{ form.requerimiento }}                    
+                                 </div>
+                                
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">7.Usuarios que atienden la visita.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+                                <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.atiendeactabodegaspatios as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="atiendeactabodegaspatios-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="atiendeactabodegaspatios-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                         <!--  <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Usuario que atiende la visita</h4>
+                          </div> -->
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Documento <span style="color: red;" class="required">*</span></th>
+                                  <th>Identificación <span style="color: red;" class="required">*</span></th>
+                                  <th>Nombre <span style="color: red;" class="required">*</span></th>
+                                  <th>Cargo <span style="color: red;" class="required">*</span></th>
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-atiendeactabodegaspatios">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="atiendeactabodegaspatios-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="atiendeactabodegaspatios{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="atiendeactabodegaspatios{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="atiendeactabodegaspatiosLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="atiendeactabodegaspatiosLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar El usuario que atendió la visita?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actabypatiende' formss.instance.pk %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-atiendeactabodegaspatios-button" class="btn btn-secondary add-atiendeactabodegaspatios">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+                      {% endwith %}
+                      <!-- inline form for Images end -->
+
+                                
+                              </div>
+                            </div>
+                          </div>
+
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">8.Funcionarios.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">
+
+                                <!-- EXPLAINING with named_formsets.variants as formset -->
+                  <!-- Note: named_formsets is used in get_context_data function in views.py -->
+                  <!-- Note: here variants is our VariantFormSet name, used in get_named_formsets function in views.py -->
+                  {% with named_formsets.funcionariosactabodegaspatios as formset %}
+                      {{ formset.management_form }}
+                      <script type="text/html" id="funcionariosactabodegaspatios-template">  // id="inlineformsetname-template"
+                          // id='inlineformsetname-__prefix__' 
+                          <tr id="funcionariosactabodegaspatios-__prefix__" class= hide_all>
+                              {% for fields in formset.empty_form.hidden_fields %}
+                                  {{ fields }}
+                              {% endfor %}
+                          
+                              {% for fields in formset.empty_form.visible_fields %}
+                                  <td>{{fields}}</td>
+                              {% endfor %}
+                          </tr>
+                      </script>
+                      <div class="table-responsive card mt-4">
+                          <!-- <div class="card-header card-header-secondary">
+                              <h4 class="card-title">Funcionarios</h4>
+                          </div> -->
+                          <table class="table card-header">
+                              <thead class="text-secondary">
+                                  <th>Funcionario <span style="color: red;" class="required">*</span></th>                                  
+                                  <th>Eliminar?</th>
+                                  <th>Eliminar</th>
+                              </thead>
+                              <tbody id="item-funcionariosactabodegaspatios">  <!-- id="item-inlineformsetname" -->
+                                  <!-- formset non forms errors -->
+                                  {% for error in formset.non_form_errors %}
+                                      <span style="color: red">{{ error }}</span>
+                                  {% endfor %}
+                                  {% for formss in formset %}
+                                      {{ formss.management_form }}
+                                      <tr id="funcionariosactabodegaspatios-{{ forloop.counter0 }}" class= hide_all>  <!-- id="inlineformsetname-counter" -->
+                                          {{ formss.id }}
+                                          {% for field in formss.visible_fields %}
+                                              <td>
+                                                  {{field}}
+                                                  {% for error in field.errors %}
+                                                      <span style="color: red">{{ error }}</span>
+                                                  {% endfor %}
+                                                  
+                                                  {% comment %} {{ field.DELETE }} {% endcomment %}
+                                              </td>
+                                          {% endfor %}
+                                          {% comment %} for delete {% endcomment %}
+                                          {% if formss.instance.pk %}
+                                              <td>
+                                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#funcionariosactabodegaspatios{{formss.instance.pk}}">
+                                                      Delete
+                                                  </button>
+                                                  <!-- Modal -->
+                                                  <div class="modal fade" id="funcionariosactabodegaspatios{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="funcionariosactabodegaspatiosLabel{{formss.instance.pk}}" aria-hidden="true">
+                                                      <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                          <h5 class="modal-title" id="funcionariosactabodegaspatiosLabel{{formss.instance.pk}}">Estas seguro(a) de eliminar el funcionario?</h5>
+                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                          </div>
+                                                          <div class="modal-footer">
+                                                              <a href="{% url 'sam:delete_actabypfuncionario' formss.instance.pk %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                          </div>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                              </td>            
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          <a href="#" id="add-funcionariosactabodegaspatios-button" class="btn btn-secondary add-funcionariosactabodegaspatios">Agregar otro</a> <!-- id="add-inlineformsetname-button" -->
+                      </div>
+                      {% endwith %}
+                      <!-- inline form for Images end -->
+
+                                
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card border-dark mb-12" style="margin-top: 5px;">
+                            <div class="card-header" style="font-weight: bold; ">9.Concepto.</div>
+                            <div class="card-body text-dark">
+                              <div class="row">                                
+                                 <div class="form-group col-3">
+                                    <label for="id_concepto">Concepto</label>   
+                                      {{ form.concepto }}                                    
+                                 </div>
+                                 <div class="form-group col-3">
+                                    <label for="id_plazo">Plazo (días)</label>   
+                                      {{ form.plazo }}                                    
+                                 </div>
+                              </div>
+                              </div>
+                            </div>
+                          
+                {% for field in form %}
+                <p>                    
+                {% for error in field.errors %}
+                    {{ error }} - {{ field.label_tag }}
+                {% endfor %}
+                </p>
+                {% endfor %}
+
+                           <div class="dropdown-divider"></div>
+                             <div class="row">
+                               <div class="col">
+                                 <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span>Guardar</button>
+                              
+                                <a href="{% url 'sam:actabodpat_list' idestablecimiento %}" class="btn btn-success">Cancelar</a>
+                               </div>
+                             </div> 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+  </form>
+{% endblock page_content %}
+
+{% block js_page %}
+   
+<script>
+
+ $(document).ready(function() {
+
+    // when user clicks add more btn of seguimiento
+      $('.add-productoquimicoactabodegaspatios').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-productoquimicoactabodegaspatios').children().length;
+          var tmplMarkup = $('#productoquimicoactabodegaspatios-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-productoquimicoactabodegaspatios').append(compiledTmpl);
+  
+          // update form count
+          $('#id_productoquimicoactabodegaspatios-TOTAL_FORMS').attr('value', count+1);
+      });
+
+      $('.add-itemactabodegaspatios').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-itemactabodegaspatios').children().length;
+          var tmplMarkup = $('#itemactabodegaspatios-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-itemactabodegaspatios').append(compiledTmpl);
+  
+          // update form count
+          $('#id_itemactabodegaspatios-TOTAL_FORMS').attr('value', count+1);
+      });
+
+      $('.add-medidasanitariaactabodegaspatios').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-medidasanitariaactabodegaspatios').children().length;
+          var tmplMarkup = $('#medidasanitariaactabodegaspatios-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-medidasanitariaactabodegaspatios').append(compiledTmpl);
+  
+          // update form count
+          $('#id_medidasanitariaactabodegaspatios-TOTAL_FORMS').attr('value', count+1);
+      });
+
+      $('.add-atiendeactabodegaspatios').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-atiendeactabodegaspatios').children().length;
+          var tmplMarkup = $('#atiendeactabodegaspatios-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-atiendeactabodegaspatios').append(compiledTmpl);
+  
+          // update form count
+          $('#id_atiendeactabodegaspatios-TOTAL_FORMS').attr('value', count+1);
+      });
+
+       $('.add-funcionariosactabodegaspatios').click(function(ev) {
+          ev.preventDefault();
+          var count = $('#item-funcionariosactabodegaspatios').children().length;
+          var tmplMarkup = $('#funcionariosactabodegaspatios-template').html();
+          var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+          $('#item-funcionariosactabodegaspatios').append(compiledTmpl);
+  
+          // update form count
+          $('#id_funcionariosactabodegaspatios-TOTAL_FORMS').attr('value', count+1);
+      });
+
+  
+  });
+</script>
+
+<script>
+
+$(function(){
+    $("#id_fecha").datetimepicker({
+        format:'d/m/Y',
+        timepicker:false
+    });
+
+    $('#id_municipio').select2({
+      placeholder: "Seleccione  la ciudad",
+      allowClear: true
+    });
+    
+ });
+</script>
+{% endblock js_page %}
+

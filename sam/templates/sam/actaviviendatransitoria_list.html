@@ -1,0 +1,82 @@
+{% extends 'base/basesam.html' %}
+{% load static %}
+{% block page_content %}
+	  <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  {% if codacta == 4 %}
+                  <h6 class="m-0 font-weight-bold text-primary">Vivienda transitoria: {{ nomestablecimiento }}</h6>
+                  {% elif codacta == 5 %}
+                  <h6 class="m-0 font-weight-bold text-primary">Hogar de paso: {{ nomestablecimiento }}</h6>
+                  {% elif codacta == 6 %}
+                  <h6 class="m-0 font-weight-bold text-primary">Hogar comunitario: {{ nomestablecimiento }}</h6>
+                  {% elif codacta == 7 %}
+                  <h6 class="m-0 font-weight-bold text-primary">Hogar geriátrico: {{ nomestablecimiento }}</h6>
+                  {% elif codacta == 8 %}
+                  <h6 class="m-0 font-weight-bold text-primary">Centros vida: {{ nomestablecimiento }}</h6>                 
+                  {% endif %}
+
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Acciones:</div>
+                      <a class="dropdown-item"  href="{% url 'sam:actavivtrans_create' idestablecimiento codacta %}"> <span class="fa fa-calendar-plus"></span>Nuevo</a>                      
+                    </div>
+                  </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  
+                    {% if not obj  %}
+                        No hay registros de actas 
+                    {% endif %}                    
+                  
+                <div class="buttons-toolbar">    
+                   <a class="dropdown-item" href="{% url 'sam:actavivtrans_create' idestablecimiento codacta %}"> <span class="fa fa-calendar-plus"></span>Nuevo</a> 
+                </div>
+
+                  <table data-toggle="table"
+                    data-pagination="true"
+                    data-search="true"
+                    data-show-columns="true"
+                    data-toolbar=".buttons-toolbar"
+                    data-locale="es-MX"
+                    data-show-toggle="true"
+                    data-show-fullscreen="true">
+                    <thead>                      
+                      <th>Fecha</th>
+                      <th>Acta Nro.</th>
+                      <th>Establecimiento</th> 
+                      <th>Motivo de visita</th>                          
+                      <th>Concepto</th>                      
+                      <th>Puntaje</th>                      
+                      <th class="all">Acciones</th> 
+                    </thead>  
+                    <tbody>
+                      {% for item in obj %}
+                        <tr>                            
+                            <td>{{ item.fecha|date:"d/m/Y" }}</td>
+                            <td>{{ item.nroacta }}</td>
+                            <td>{{ item.establecimiento }}</td>              
+                            <td>{{ item.motivovisita }}</td>                                 
+                            <td>{{ item.concepto }}</td>                                 
+                            <td>{{ item.puntaje }}</td>
+                            <td>
+                              <a href="{% url 'sam:actavivtrans_edit' idestablecimiento codacta item.pk %}" class="btn btn-warning btn-circle"><i class="fas fa-cart-plus"></i></a>
+                             
+                            </td>
+                          </tr>                   
+                      {% endfor %}
+                    </tbody>
+
+                  </table>
+                </div>
+            </div>
+{% endblock page_content %}
+
+{% block js_page %}
+ 
+
+ {% endblock %}

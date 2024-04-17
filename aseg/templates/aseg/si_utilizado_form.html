@@ -1,0 +1,89 @@
+{% extends 'base/basebdua.html' %}
+
+{% block page_content %}
+
+    {% if obj %}
+    <form  method='POST' role='form' action = "{% url 'aseg:siutilizado_edit' obj.pk %}"> 
+    {% else %}  
+    <form  method='POST' role='form' action = "{% url 'aseg:siutilizado_create' %}">
+    {% endif %}
+        {% csrf_token %}
+              <div class="col-xl-12 col-md-12 mb-12">
+                {% if obj %}
+                  <div class="card border-left-warning shadow h-100 py-2">
+                {% else %}    
+                  <div class="card border-left-success shadow h-100 py-2">
+                 {%  endif %}   
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                              {% if obj %} Editar {% else %} Nuevo {% endif %} Sistema de información utilizado.
+                           </div>                      
+                           <div class="dropdown-divider"></div> 
+                                                  
+                               <div class="row">
+
+                                  <div class="form-group col-3">
+                                    <label for="id_cuentaconsi">Cuenta con sistema de información</label>
+                                     {{form.cuentaconsi}}                  
+                                  </div>
+
+                                 
+                                 <div class="form-group col-5">
+                                    <label for="id_realizacruces">Realiza cruces con otras bases de datos y tramita novedades encontradas</label>
+                                      {{form.realizacruces}}
+                                </div>
+                                
+                                 <div class="form-group col-4">
+                                    <label for="id_bdcruces">Base de datos para cruces</label>
+                                      {{form.bdcruces}}
+                                  </div>                                  
+                              </div>                                           
+                                                        
+                                <div class="row">
+                                  <div class="form-group col-4">
+                                    <label for="id_eps">Herramienta o software utilizado</label>
+                                      {{ form.herramientasw}}
+                                    </div>
+
+                                    <div class="form-group col-4">
+                                    <label for="id_responsable">Reponsable</label>
+                                      {{ form.responsable}}
+                                    </div>
+
+                                  <div class="form-group col-4">
+                                    <label for="id_cargo">Cargo</label>
+                                    {{form.cargo}}                         
+                                  </div>                                   
+                            </div>
+
+                           <div class="row">
+                             <div class="form-group col-12">
+                                    <label for="id_observacion">Observación</label>
+                                    {{form.observacion}}        
+                             </div>                             
+                           </div>
+                           <div class="dropdown-divider"></div>
+                             <div class="row">
+                               <div class="col">
+                                 <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span>Guardar</button>
+                                <a href="{% url 'aseg:siutilizado_list' %}" class="btn btn-success">Cancelar</a>
+                               
+                               </div>
+                             </div> 
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+     
+    </form>  
+
+{% endblock page_content %}
+  
+{% block js_page %}
+
+{% endblock js_page %}
+
