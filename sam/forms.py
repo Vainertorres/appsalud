@@ -438,7 +438,7 @@ class ActaViviendaTransitoriaForm(forms.ModelForm):
 	qrysetconcepto={}
 	tipoacta = TipoActa.objects.filter(idtipoacta='MISFO-VITR').first()
 	if tipoacta:
-		qrysetconcepto = filtrar_concepto_sanitario(tipoacta['id']).all()
+		qrysetconcepto = filtrar_concepto_sanitario(tipoacta['id'])
 
 	class Meta:
 		model = ActaViviendaTransitoria
@@ -696,7 +696,7 @@ class ActaCentroCarcelarioForm(forms.ModelForm):
 	qrysetconcepto = {}
 	tipoacta = TipoActa.objects.filter(idtipoacta='MISFO-CARC').first()
 	if tipoacta:
-		qrysetconcepto = filtrar_concepto_sanitario(tipoacta['id']).all()
+		qrysetconcepto = filtrar_concepto_sanitario(tipoacta['id'])
 
 	class Meta:
 		model = ActaCentroCarcelario
@@ -808,7 +808,7 @@ class ActaDrogueriaForm(forms.ModelForm):
 
 	tipoacta = TipoActa.objects.filter(idtipoacta='MISFO-DROG').first()
 	if tipoacta:
-		qrysetconcepto = filtrar_concepto_sanitario(tipoacta.pk).all()
+		qrysetconcepto = filtrar_concepto_sanitario(tipoacta.pk)
 	else:
 		qrysetconcepto={}
 
