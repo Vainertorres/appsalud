@@ -91,7 +91,8 @@ DATABASES = {
         'NAME': 'suisa',
         'USER': 'postgres',
         'PASSWORD': 'admin123',
-        'HOST': 'db',
+        'HOST': 'localhost',
+        #'HOST': 'db',
         'PORT': 5432,
     }
 }
